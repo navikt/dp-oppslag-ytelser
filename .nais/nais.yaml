@@ -1,13 +1,18 @@
 apiVersion: nais.io/v1alpha1
 kind: Application
 metadata:
-  name: {{ name }}
+  name: dp-oppslag-ytelser
   namespace: teamdagpenger
   labels:
     team: teamdagpenger
 spec:
   image: {{ image }}
   port: 8080
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 100%
+      maxUnavailable: 99%
   azure:
     application:
       enabled: true
@@ -18,8 +23,6 @@ spec:
   prometheus:
     enabled: true
     path: /metrics
-  strategy:
-    type: Recreate
   replicas:
     min: 1
     max: 1

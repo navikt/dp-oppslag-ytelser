@@ -30,20 +30,26 @@ class AbakusClient(
     private val objectMapper: ObjectMapper = defaultObjectMapper(),
     private val getToken: suspend () -> String,
     engine: HttpClientEngine? = null,
-    private val httpClient: HttpClient = defaultHttpClient(
-        objectMapper = objectMapper,
-        engine = engine,
-    ),
+    private val httpClient: HttpClient =
+        defaultHttpClient(
+            objectMapper = objectMapper,
+            engine = engine,
+        ),
 ) {
     companion object {
-        const val navCallIdHeader = "Nav-Call-Id"
+        const val NAV_CALL_ID_HEADER = "Nav-Call-Id"
     }
 
-    suspend fun hentYtelser(ident: String, fom: LocalDate, tom: LocalDate, behovId: String): List<YtelseV1> {
+    suspend fun hentYtelser(
+        ident: String,
+        fom: LocalDate,
+        tom: LocalDate,
+        behovId: String,
+    ): List<YtelseV1> {
         SECURELOG.info { getToken }
         val httpResponse =
             httpClient.preparePost("${config.baseUrl}/fpabakus/ekstern/api/ytelse/v1/hent-ytelse-vedtak") {
-                header(navCallIdHeader, behovId)
+                header(NAV_CALL_ID_HEADER, behovId)
                 bearerAuth(getToken())
                 accept(ContentType.Application.Json)
                 contentType(ContentType.Application.Json)

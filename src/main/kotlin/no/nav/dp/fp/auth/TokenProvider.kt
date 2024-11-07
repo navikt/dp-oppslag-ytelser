@@ -27,12 +27,13 @@ class AzureTokenProvider(
     engine: HttpClientEngine? = null,
     private val config: OauthConfig = Configuration.oauthConfig(),
 ) : TokenProvider {
-    private val azureHttpClient = defaultHttpClient(objectMapper = objectMapper, engine = engine) {
-        System.getenv("HTTP_PROXY")?.let {
-            LOG.info("Setter opp proxy mot $it")
-            this.proxy = ProxyBuilder.http(it)
+    private val azureHttpClient =
+        defaultHttpClient(objectMapper = objectMapper, engine = engine) {
+            System.getenv("HTTP_PROXY")?.let {
+                LOG.info("Setter opp proxy mot $it")
+                this.proxy = ProxyBuilder.http(it)
+            }
         }
-    }
 
     private val tokenCache = TokenCache()
 
@@ -56,12 +57,13 @@ class AzureTokenProvider(
     private suspend fun clientCredentials(): String {
         return azureHttpClient.submitForm(
             url = wellknown().tokenEndpoint,
-            formParameters = Parameters.build {
-                append("grant_type", "client_credentials")
-                append("client_id", config.clientId)
-                append("client_secret", config.clientSecret)
-                append("scope", config.scope)
-            },
+            formParameters =
+                Parameters.build {
+                    append("grant_type", "client_credentials")
+                    append("client_id", config.clientId)
+                    append("client_secret", config.clientSecret)
+                    append("scope", config.scope)
+                },
         ).body<OAuth2AccessTokenResponse>().let {
             tokenCache.update(
                 it.accessToken,
@@ -72,14 +74,16 @@ class AzureTokenProvider(
     }
 
     class TokenCache {
-
         var token: String? = null
             private set
         private var expires: LocalDateTime? = null
 
         fun isExpired(): Boolean = expires?.isBefore(LocalDateTime.now()) ?: true
 
-        fun update(accessToken: String, expiresIn: Long) {
+        fun update(
+            accessToken: String,
+            expiresIn: Long,
+        ) {
             token = accessToken
             expires = LocalDateTime.now().plusSeconds(expiresIn).minusSeconds(Companion.SAFETYMARGIN)
         }

@@ -1,10 +1,10 @@
 package no.nav.dp.fp
 
+import com.github.navikt.tbd_libs.rapids_and_rivers_api.RapidsConnection
 import mu.KotlinLogging
-import no.nav.helse.rapids_rivers.RapidApplication
-import no.nav.helse.rapids_rivers.RapidsConnection
 import no.nav.dp.fp.abakusclient.AbakusClient
 import no.nav.dp.fp.auth.AzureTokenProvider
+import no.nav.helse.rapids_rivers.RapidApplication
 
 fun main() {
     System.setProperty("logback.configurationFile", "egenLogback.xml")
@@ -17,9 +17,10 @@ fun main() {
     }
 
     val tokenProviderClient = AzureTokenProvider()
-    val abakusClient = AbakusClient(
-        getToken = tokenProviderClient::getToken,
-    )
+    val abakusClient =
+        AbakusClient(
+            getToken = tokenProviderClient::getToken,
+        )
 
     RapidApplication.create(Configuration.rapidsAndRivers).apply {
         ForeldrepengerService(
@@ -27,15 +28,17 @@ fun main() {
             client = abakusClient,
         )
 
-        register(object : RapidsConnection.StatusListener {
-            override fun onStartup(rapidsConnection: RapidsConnection) {
-                log.info { "Starting dp-fp" }
-            }
+        register(
+            object : RapidsConnection.StatusListener {
+                override fun onStartup(rapidsConnection: RapidsConnection) {
+                    log.info { "Starter dp-oppslag-ytelser" }
+                }
 
-            override fun onShutdown(rapidsConnection: RapidsConnection) {
-                log.info { "Stopping dp-fp" }
-                super.onShutdown(rapidsConnection)
-            }
-        })
+                override fun onShutdown(rapidsConnection: RapidsConnection) {
+                    log.info { "Stopper dp-oppslag-ytelser" }
+                    super.onShutdown(rapidsConnection)
+                }
+            },
+        )
     }.start()
 }
