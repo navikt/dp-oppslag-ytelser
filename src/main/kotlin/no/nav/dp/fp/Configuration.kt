@@ -4,39 +4,25 @@ import com.natpryce.konfig.ConfigurationMap
 import com.natpryce.konfig.ConfigurationProperties.Companion.systemProperties
 import com.natpryce.konfig.EnvironmentVariables
 import com.natpryce.konfig.Key
+import com.natpryce.konfig.getValue
 import com.natpryce.konfig.overriding
 import com.natpryce.konfig.stringType
 import no.nav.dp.fp.abakusclient.AbakusClient
 import no.nav.dp.fp.auth.AzureTokenProvider
 
 object Configuration {
-    val rapidsAndRivers =
-        mapOf(
-            "RAPID_APP_NAME" to "dp-oppslag-ytelser",
-            "KAFKA_BROKERS" to System.getenv("KAFKA_BROKERS"),
-            "KAFKA_CREDSTORE_PASSWORD" to System.getenv("KAFKA_CREDSTORE_PASSWORD"),
-            "KAFKA_TRUSTSTORE_PATH" to System.getenv("KAFKA_TRUSTSTORE_PATH"),
-            "KAFKA_KEYSTORE_PATH" to System.getenv("KAFKA_KEYSTORE_PATH"),
-            "KAFKA_RAPID_TOPIC" to "teamdagpenger.rapid.v1",
-            "KAFKA_RESET_POLICY" to "LATEST",
-            "KAFKA_CONSUMER_GROUP_ID" to "dp-oppslag-ytelser-v1",
-        )
-
-    private val otherDefaultProperties =
-        mapOf(
-            "application.httpPort" to 8080.toString(),
-            "SERVICEUSER_TPTS_USERNAME" to System.getenv("SERVICEUSER_TPTS_USERNAME"),
-            "SERVICEUSER_TPTS_PASSWORD" to System.getenv("SERVICEUSER_TPTS_PASSWORD"),
-        )
-    private val defaultProperties = ConfigurationMap(rapidsAndRivers + otherDefaultProperties)
-    private val localProperties =
+    private val defaultProperties =
         ConfigurationMap(
             mapOf(
-                "application.profile" to Profile.LOCAL.toString(),
-                "abakusScope" to "api://dev-fss.teamforeldrepenger.fpabakus/.default",
-                "abakusBaseUrl" to "http://fpabakus.teamforeldrepenger",
+                "RAPID_APP_NAME" to "dp-oppslag-ytelser",
+                "KAFKA_RAPID_TOPIC" to "teamdagpenger.rapid.v1",
+                "KAFKA_RESET_POLICY" to "LATEST",
+                "KAFKA_CONSUMER_GROUP_ID" to "dp-oppslag-ytelser-v1",
+                "SERVICEUSER_TPTS_USERNAME" to System.getenv("SERVICEUSER_TPTS_USERNAME"),
+                "SERVICEUSER_TPTS_PASSWORD" to System.getenv("SERVICEUSER_TPTS_PASSWORD"),
             ),
         )
+
     private val devProperties =
         ConfigurationMap(
             mapOf(
@@ -63,8 +49,13 @@ object Configuration {
                 systemProperties() overriding EnvironmentVariables overriding prodProperties overriding defaultProperties
 
             else -> {
-                systemProperties() overriding EnvironmentVariables overriding localProperties overriding defaultProperties
+                systemProperties() overriding EnvironmentVariables overriding devProperties overriding defaultProperties
             }
+        }
+
+    val config: Map<String, String> =
+        config().list().reversed().fold(emptyMap()) { map, pair ->
+            map + pair.second
         }
 
     fun oauthConfig(
