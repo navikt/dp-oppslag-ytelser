@@ -50,5 +50,5 @@ configurations.all {
 }
 
 application {
-    mainClass.set("no.nav.dp.fp.ApplicationKt")
+    mainClass.set(" no.nav.dagpenger.andre.ytelser.AppKt")
 }
