@@ -11,9 +11,7 @@ import io.ktor.client.request.forms.submitForm
 import io.ktor.client.request.get
 import io.ktor.http.Parameters
 import mu.KotlinLogging
-import no.nav.dagpenger.andre.ytelser.defaultHttpClient
-import no.nav.dagpenger.andre.ytelser.defaultObjectMapper
-import no.nav.dp.fp.Configuration
+import no.nav.dagpenger.andre.ytelser.Configuration
 import java.time.LocalDateTime
 
 private val LOG = KotlinLogging.logger {}

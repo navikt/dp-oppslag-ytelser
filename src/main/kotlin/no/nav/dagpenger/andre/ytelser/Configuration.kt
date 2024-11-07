@@ -4,11 +4,10 @@ import com.natpryce.konfig.ConfigurationMap
 import com.natpryce.konfig.ConfigurationProperties.Companion.systemProperties
 import com.natpryce.konfig.EnvironmentVariables
 import com.natpryce.konfig.Key
-import com.natpryce.konfig.getValue
 import com.natpryce.konfig.overriding
 import com.natpryce.konfig.stringType
-import no.nav.dp.fp.abakusclient.AbakusClient
-import no.nav.dp.fp.auth.AzureTokenProvider
+import no.nav.dagpenger.andre.ytelser.abakusclient.AbakusClient
+import no.nav.dagpenger.andre.ytelser.auth.AzureTokenProvider
 
 object Configuration {
     private val defaultProperties =

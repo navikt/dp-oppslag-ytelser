@@ -16,19 +16,19 @@ import kotlinx.coroutines.slf4j.MDCContext
 import mu.KotlinLogging
 import mu.withLoggingContext
 import net.logstash.logback.argument.StructuredArguments
-import no.nav.dp.fp.FPResponsDTO.AnvisningDTO
-import no.nav.dp.fp.FPResponsDTO.KildesystemDTO
-import no.nav.dp.fp.FPResponsDTO.PeriodeDTO
-import no.nav.dp.fp.FPResponsDTO.StatusDTO
-import no.nav.dp.fp.FPResponsDTO.YtelseV1DTO
-import no.nav.dp.fp.FPResponsDTO.YtelserOutput
-import no.nav.dp.fp.abakusclient.AbakusClient
-import no.nav.dp.fp.abakusclient.models.Anvisning
-import no.nav.dp.fp.abakusclient.models.Kildesystem
-import no.nav.dp.fp.abakusclient.models.Periode
-import no.nav.dp.fp.abakusclient.models.Status
-import no.nav.dp.fp.abakusclient.models.YtelseV1
-import no.nav.dp.fp.abakusclient.models.Ytelser
+import no.nav.dagpenger.andre.ytelser.FPResponsDTO.AnvisningDTO
+import no.nav.dagpenger.andre.ytelser.FPResponsDTO.KildesystemDTO
+import no.nav.dagpenger.andre.ytelser.FPResponsDTO.PeriodeDTO
+import no.nav.dagpenger.andre.ytelser.FPResponsDTO.StatusDTO
+import no.nav.dagpenger.andre.ytelser.FPResponsDTO.YtelseV1DTO
+import no.nav.dagpenger.andre.ytelser.FPResponsDTO.YtelserOutput
+import no.nav.dagpenger.andre.ytelser.abakusclient.AbakusClient
+import no.nav.dagpenger.andre.ytelser.abakusclient.models.Anvisning
+import no.nav.dagpenger.andre.ytelser.abakusclient.models.Kildesystem
+import no.nav.dagpenger.andre.ytelser.abakusclient.models.Periode
+import no.nav.dagpenger.andre.ytelser.abakusclient.models.Status
+import no.nav.dagpenger.andre.ytelser.abakusclient.models.YtelseV1
+import no.nav.dagpenger.andre.ytelser.abakusclient.models.Ytelser
 import java.time.LocalDate
 
 private val LOG = KotlinLogging.logger {}

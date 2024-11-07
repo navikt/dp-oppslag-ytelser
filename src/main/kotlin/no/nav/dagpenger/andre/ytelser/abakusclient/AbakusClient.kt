@@ -13,14 +13,14 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import mu.KotlinLogging
+import no.nav.dagpenger.andre.ytelser.Configuration
+import no.nav.dagpenger.andre.ytelser.abakusclient.models.Ident
+import no.nav.dagpenger.andre.ytelser.abakusclient.models.Periode
+import no.nav.dagpenger.andre.ytelser.abakusclient.models.Request
+import no.nav.dagpenger.andre.ytelser.abakusclient.models.YtelseV1
+import no.nav.dagpenger.andre.ytelser.abakusclient.models.Ytelser
 import no.nav.dagpenger.andre.ytelser.defaultHttpClient
 import no.nav.dagpenger.andre.ytelser.defaultObjectMapper
-import no.nav.dp.fp.Configuration
-import no.nav.dp.fp.abakusclient.models.Ident
-import no.nav.dp.fp.abakusclient.models.Periode
-import no.nav.dp.fp.abakusclient.models.Request
-import no.nav.dp.fp.abakusclient.models.YtelseV1
-import no.nav.dp.fp.abakusclient.models.Ytelser
 import java.time.LocalDate
 
 private val SECURELOG = KotlinLogging.logger("tjenestekall")
@@ -28,12 +28,11 @@ private val SECURELOG = KotlinLogging.logger("tjenestekall")
 class AbakusClient(
     private val config: AbakusClientConfig = Configuration.abakusClientConfig(),
     private val objectMapper: ObjectMapper =
-        no.nav.dagpenger.andre.ytelser
-            .defaultObjectMapper(),
+        defaultObjectMapper(),
     private val getToken: suspend () -> String,
     engine: HttpClientEngine? = null,
     private val httpClient: HttpClient =
-        no.nav.dagpenger.andre.ytelser.defaultHttpClient(
+        defaultHttpClient(
             objectMapper = objectMapper,
             engine = engine,
         ),

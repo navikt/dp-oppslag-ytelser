@@ -2,6 +2,8 @@ package no.nav.dagpenger.andre.ytelser
 
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.RapidsConnection
 import mu.KotlinLogging
+import no.nav.dagpenger.andre.ytelser.abakusclient.AbakusClient
+import no.nav.dagpenger.andre.ytelser.auth.AzureTokenProvider
 import no.nav.helse.rapids_rivers.RapidApplication
 
 fun main() {
@@ -13,11 +15,12 @@ fun main() {
         sikkerlogg.error(e) { e.message }
     }
 
-//    val tokenProviderClient = AzureTokenProvider()
-//    val abakusClient =
-//        AbakusClient(
-//            getToken = tokenProviderClient::getToken,
-//        )
+    val tokenProviderClient by lazy { AzureTokenProvider() }
+    val abakusClient by lazy {
+        AbakusClient(
+            getToken = tokenProviderClient::getToken,
+        )
+    }
 
     RapidApplication
         .create(Configuration.config)

@@ -55,18 +55,18 @@ private fun defaultSetup(objectMapper: ObjectMapper): HttpClientConfig<*>.() -> 
             register(ContentType.Application.Json, JacksonConverter(objectMapper))
         }
         install(HttpTimeout) {
-            connectTimeoutMillis = Duration.ofSeconds(no.nav.dagpenger.andre.ytelser.SIXTY_SECONDS).toMillis()
-            requestTimeoutMillis = Duration.ofSeconds(no.nav.dagpenger.andre.ytelser.SIXTY_SECONDS).toMillis()
-            socketTimeoutMillis = Duration.ofSeconds(no.nav.dagpenger.andre.ytelser.SIXTY_SECONDS).toMillis()
+            connectTimeoutMillis = Duration.ofSeconds(SIXTY_SECONDS).toMillis()
+            requestTimeoutMillis = Duration.ofSeconds(SIXTY_SECONDS).toMillis()
+            socketTimeoutMillis = Duration.ofSeconds(SIXTY_SECONDS).toMillis()
         }
 
         this.install(Logging) {
             logger =
                 object : Logger {
                     override fun log(message: String) {
-                        no.nav.dagpenger.andre.ytelser.LOG
+                        LOG
                             .info("HttpClient detaljer logget til securelog")
-                        no.nav.dagpenger.andre.ytelser.SECURELOG
+                        SECURELOG
                             .info(message)
                     }
                 }
