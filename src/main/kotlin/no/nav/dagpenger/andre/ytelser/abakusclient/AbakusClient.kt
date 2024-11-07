@@ -1,45 +1,61 @@
 package no.nav.dagpenger.andre.ytelser.abakusclient
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.HttpClientEngine
+import io.ktor.client.engine.cio.CIO
+import io.ktor.client.plugins.HttpTimeout
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.accept
-import io.ktor.client.request.bearerAuth
 import io.ktor.client.request.header
 import io.ktor.client.request.preparePost
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpHeaders.XCorrelationId
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
-import mu.KotlinLogging
+import io.ktor.serialization.jackson.JacksonConverter
 import no.nav.dagpenger.andre.ytelser.Configuration
 import no.nav.dagpenger.andre.ytelser.abakusclient.models.Ident
 import no.nav.dagpenger.andre.ytelser.abakusclient.models.Periode
 import no.nav.dagpenger.andre.ytelser.abakusclient.models.Request
 import no.nav.dagpenger.andre.ytelser.abakusclient.models.YtelseV1
 import no.nav.dagpenger.andre.ytelser.abakusclient.models.Ytelser
-import no.nav.dagpenger.andre.ytelser.defaultHttpClient
 import no.nav.dagpenger.andre.ytelser.defaultObjectMapper
+import java.time.Duration
 import java.time.LocalDate
 
-private val SECURELOG = KotlinLogging.logger("tjenestekall")
-
 class AbakusClient(
-    private val config: AbakusClientConfig = Configuration.abakusClientConfig(),
-    private val objectMapper: ObjectMapper =
-        defaultObjectMapper(),
-    private val getToken: suspend () -> String,
-    engine: HttpClientEngine? = null,
-    private val httpClient: HttpClient =
-        defaultHttpClient(
-            objectMapper = objectMapper,
-            engine = engine,
-        ),
+    private val baseUrl: String = Configuration.abakusBaseUrl(),
+    httpClientEngine: HttpClientEngine = CIO.create { requestTimeout = Long.MAX_VALUE },
+    private val tokenProvider: () -> String,
 ) {
     companion object {
         const val NAV_CALL_ID_HEADER = "Nav-Call-Id"
     }
+
+    private val httpKlient =
+        HttpClient(httpClientEngine) {
+            expectSuccess = true
+            install(ContentNegotiation) {
+                register(ContentType.Application.Json, JacksonConverter(defaultObjectMapper()))
+            }
+            install(Logging) {
+                level = LogLevel.INFO
+            }
+            install(HttpTimeout) {
+                connectTimeoutMillis = Duration.ofSeconds(15).toMillis()
+                requestTimeoutMillis = Duration.ofSeconds(15).toMillis()
+                socketTimeoutMillis = Duration.ofSeconds(15).toMillis()
+            }
+            defaultRequest {
+                header(HttpHeaders.Authorization, "Bearer ${tokenProvider.invoke()}")
+            }
+        }
 
     suspend fun hentYtelser(
         ident: String,
@@ -47,12 +63,11 @@ class AbakusClient(
         tom: LocalDate,
         behovId: String,
     ): List<YtelseV1> {
-        SECURELOG.info { getToken }
         val httpResponse =
-            httpClient
-                .preparePost("${config.baseUrl}/fpabakus/ekstern/api/ytelse/v1/hent-ytelse-vedtak") {
+            httpKlient
+                .preparePost("$baseUrl/fpabakus/ekstern/api/ytelse/v1/hent-ytelse-vedtak") {
                     header(NAV_CALL_ID_HEADER, behovId)
-                    bearerAuth(getToken())
+                    header(XCorrelationId, behovId)
                     accept(ContentType.Application.Json)
                     contentType(ContentType.Application.Json)
                     setBody(

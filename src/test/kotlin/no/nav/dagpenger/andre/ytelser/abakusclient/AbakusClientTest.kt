@@ -26,8 +26,8 @@ internal class AbakusClientTest {
 
         val client =
             AbakusClient(
-                getToken = { "whatever" },
-                engine = mockEngine,
+                tokenProvider = { "token" },
+                httpClientEngine = mockEngine,
             )
 
         val response: List<YtelseV1> =
@@ -55,8 +55,8 @@ internal class AbakusClientTest {
 
         val client =
             AbakusClient(
-                getToken = { "whatever" },
-                engine = mockEngine,
+                tokenProvider = { "token" },
+                httpClientEngine = mockEngine,
             )
 
         val response: List<YtelseV1> =

@@ -6,8 +6,9 @@ import com.natpryce.konfig.EnvironmentVariables
 import com.natpryce.konfig.Key
 import com.natpryce.konfig.overriding
 import com.natpryce.konfig.stringType
-import no.nav.dagpenger.andre.ytelser.abakusclient.AbakusClient
-import no.nav.dagpenger.andre.ytelser.auth.AzureTokenProvider
+import kotlinx.coroutines.runBlocking
+import no.nav.dagpenger.oauth2.CachedOauth2Client
+import no.nav.dagpenger.oauth2.OAuth2Config
 
 object Configuration {
     private val defaultProperties =
@@ -57,20 +58,23 @@ object Configuration {
             map + pair.second
         }
 
-    fun oauthConfig(
-        scope: String = config()[Key("abakusScope", stringType)],
-        clientId: String = config()[Key("AZURE_APP_CLIENT_ID", stringType)],
-        clientSecret: String = config()[Key("AZURE_APP_CLIENT_SECRET", stringType)],
-        wellknownUrl: String = config()[Key("AZURE_APP_WELL_KNOWN_URL", stringType)],
-    ) = AzureTokenProvider.OauthConfig(
-        scope = scope,
-        clientId = clientId,
-        clientSecret = clientSecret,
-        wellknownUrl = wellknownUrl,
-    )
+    fun abakusTokenProvider(): () -> String = azureAdTokenSupplier(config()[Key("abakusScope", stringType)])
 
-    fun abakusClientConfig(baseUrl: String = config()[Key("abakusBaseUrl", stringType)]) =
-        AbakusClient.AbakusClientConfig(baseUrl = baseUrl)
+    fun abakusBaseUrl(): String = config()[Key("abakusBaseUrl", stringType)]
+
+    private val azureAdClient: CachedOauth2Client by lazy {
+        val azureAdConfig = OAuth2Config.AzureAd(config())
+        CachedOauth2Client(
+            tokenEndpointUrl = azureAdConfig.tokenEndpointUrl,
+            authType = azureAdConfig.clientSecret(),
+        )
+    }
+
+    private fun azureAdTokenSupplier(scope: String): () -> String =
+        {
+            runBlocking { azureAdClient.clientCredentials(scope).accessToken }
+                ?: throw RuntimeException("Kunne ikke hente 'access_token' fra Azure AD for scope $scope")
+        }
 }
 
 enum class Profile {
