@@ -26,7 +26,7 @@ dependencies {
     implementation(libs.konfig)
     implementation(libs.kotlin.logging)
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.8.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.9.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:1.8.1")
 
     implementation(libs.bundles.ktor.client)
