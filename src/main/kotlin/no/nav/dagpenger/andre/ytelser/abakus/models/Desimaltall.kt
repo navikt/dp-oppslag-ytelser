@@ -1,4 +1,4 @@
-package no.nav.dagpenger.andre.ytelser.abakusclient.models
+package no.nav.dagpenger.andre.ytelser.abakus.models
 
 import java.math.BigDecimal
 

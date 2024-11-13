@@ -1,6 +1,5 @@
-package no.nav.dagpenger.andre.ytelser.abakusclient.models
+package no.nav.dagpenger.andre.ytelser.abakus.models
 
-import no.nav.dagpenger.andre.ytelser.defaultObjectMapper
 import org.junit.jupiter.api.Test
 import org.skyscreamer.jsonassert.JSONAssert
 import org.skyscreamer.jsonassert.JSONCompareMode

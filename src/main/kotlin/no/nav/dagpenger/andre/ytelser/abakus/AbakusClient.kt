@@ -1,4 +1,4 @@
-package no.nav.dagpenger.andre.ytelser.abakusclient
+package no.nav.dagpenger.andre.ytelser.abakus
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -20,11 +20,11 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import io.ktor.serialization.jackson.JacksonConverter
 import no.nav.dagpenger.andre.ytelser.Configuration
-import no.nav.dagpenger.andre.ytelser.abakusclient.models.Ident
-import no.nav.dagpenger.andre.ytelser.abakusclient.models.Periode
-import no.nav.dagpenger.andre.ytelser.abakusclient.models.Request
-import no.nav.dagpenger.andre.ytelser.abakusclient.models.YtelseV1
-import no.nav.dagpenger.andre.ytelser.abakusclient.models.Ytelser
+import no.nav.dagpenger.andre.ytelser.abakus.models.Ident
+import no.nav.dagpenger.andre.ytelser.abakus.models.Periode
+import no.nav.dagpenger.andre.ytelser.abakus.models.Request
+import no.nav.dagpenger.andre.ytelser.abakus.models.YtelseV1
+import no.nav.dagpenger.andre.ytelser.abakus.models.Ytelser
 import no.nav.dagpenger.andre.ytelser.defaultObjectMapper
 import java.time.Duration
 import java.time.LocalDate

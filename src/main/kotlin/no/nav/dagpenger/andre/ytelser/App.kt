@@ -2,7 +2,7 @@ package no.nav.dagpenger.andre.ytelser
 
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.RapidsConnection
 import mu.KotlinLogging
-import no.nav.dagpenger.andre.ytelser.abakusclient.AbakusClient
+import no.nav.dagpenger.andre.ytelser.abakus.AbakusClient
 import no.nav.helse.rapids_rivers.RapidApplication
 
 fun main() {

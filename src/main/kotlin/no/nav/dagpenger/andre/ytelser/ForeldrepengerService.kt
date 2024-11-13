@@ -15,13 +15,13 @@ import no.nav.dagpenger.andre.ytelser.FPResponsDTO.PeriodeDTO
 import no.nav.dagpenger.andre.ytelser.FPResponsDTO.StatusDTO
 import no.nav.dagpenger.andre.ytelser.FPResponsDTO.YtelseV1DTO
 import no.nav.dagpenger.andre.ytelser.FPResponsDTO.YtelserOutput
-import no.nav.dagpenger.andre.ytelser.abakusclient.AbakusClient
-import no.nav.dagpenger.andre.ytelser.abakusclient.models.Anvisning
-import no.nav.dagpenger.andre.ytelser.abakusclient.models.Kildesystem
-import no.nav.dagpenger.andre.ytelser.abakusclient.models.Periode
-import no.nav.dagpenger.andre.ytelser.abakusclient.models.Status
-import no.nav.dagpenger.andre.ytelser.abakusclient.models.YtelseV1
-import no.nav.dagpenger.andre.ytelser.abakusclient.models.Ytelser
+import no.nav.dagpenger.andre.ytelser.abakus.AbakusClient
+import no.nav.dagpenger.andre.ytelser.abakus.models.Anvisning
+import no.nav.dagpenger.andre.ytelser.abakus.models.Kildesystem
+import no.nav.dagpenger.andre.ytelser.abakus.models.Periode
+import no.nav.dagpenger.andre.ytelser.abakus.models.Status
+import no.nav.dagpenger.andre.ytelser.abakus.models.YtelseV1
+import no.nav.dagpenger.andre.ytelser.abakus.models.Ytelser
 import java.time.LocalDate
 
 private val LOG = KotlinLogging.logger {}

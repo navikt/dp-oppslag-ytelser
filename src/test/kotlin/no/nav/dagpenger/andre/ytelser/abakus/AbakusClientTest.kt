@@ -1,4 +1,4 @@
-package no.nav.dagpenger.andre.ytelser.abakusclient
+package no.nav.dagpenger.andre.ytelser.abakus
 
 import io.kotest.matchers.shouldBe
 import io.ktor.client.engine.mock.MockEngine
@@ -8,7 +8,7 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.headersOf
 import kotlinx.coroutines.runBlocking
-import no.nav.dagpenger.andre.ytelser.abakusclient.models.YtelseV1
+import no.nav.dagpenger.andre.ytelser.abakus.models.YtelseV1
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 

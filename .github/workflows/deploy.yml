@@ -87,23 +87,23 @@ jobs:
           VAR: image=${{ needs.build.outputs.image }}
           VARS: .nais/vars-dev.yaml
           PRINT_PAYLOAD: true
-#
-#  deploy-prod:
-#    name: Deploy to Production
-#    needs: [ build ]
-#    if: github.ref == 'refs/heads/main'
-#    runs-on: ubuntu-latest
-#    environment: prod-gcp
-#    permissions:
-#      contents: read
-#      id-token: write
-#    steps:
-#      - uses: actions/checkout@v4
-#      - uses: nais/deploy/actions/deploy@v2
-#        env:
-#          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-#          CLUSTER: prod-gcp
-#          RESOURCE: .nais/nais.yaml
-#          VARS: .nais/vars-prod.yaml
-#          VAR: image=${{ needs.build.outputs.image }}
-#          PRINT_PAYLOAD: true
+
+  deploy-prod:
+    name: Deploy to Production
+    needs: [ build ]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: prod-gcp
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: nais/deploy/actions/deploy@v2
+        env:
+          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+          CLUSTER: prod-gcp
+          RESOURCE: .nais/nais.yaml
+          VARS: .nais/vars-prod.yaml
+          VAR: image=${{ needs.build.outputs.image }}
+          PRINT_PAYLOAD: true

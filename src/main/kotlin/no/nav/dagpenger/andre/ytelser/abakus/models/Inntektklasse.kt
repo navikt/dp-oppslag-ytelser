@@ -1,4 +1,4 @@
-package no.nav.dagpenger.andre.ytelser.abakusclient.models
+package no.nav.dagpenger.andre.ytelser.abakus.models
 
 enum class Inntektklasse {
     ARBEIDSTAKER,
