@@ -18,6 +18,7 @@ internal class AbakusClientTest {
         val mockEngine =
             MockEngine { request ->
                 request.url.toString() shouldBe "https://fpabakus.dev-fss-pub.nais.io/fpabakus/ekstern/api/ytelse/v1/hent-ytelse-vedtakt"
+                request.headers[HttpHeaders.Authorization] shouldBe "Bearer token"
                 respond(
                     content = enkeltSvar,
                     status = HttpStatusCode.OK,
@@ -46,7 +47,7 @@ internal class AbakusClientTest {
     @Test
     fun `skal klare å deserialisere body med liste som returneres`() {
         val mockEngine =
-            MockEngine { request ->
+            MockEngine { _ ->
                 respond(
                     content = svarMedListe,
                     status = HttpStatusCode.OK,

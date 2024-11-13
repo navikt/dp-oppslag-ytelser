@@ -11,12 +11,11 @@ import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.accept
 import io.ktor.client.request.header
-import io.ktor.client.request.preparePost
+import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpHeaders.XCorrelationId
-import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import io.ktor.serialization.jackson.JacksonConverter
 import no.nav.dagpenger.andre.ytelser.Configuration
@@ -62,25 +61,19 @@ class AbakusClient(
         fom: LocalDate,
         tom: LocalDate,
         behovId: String,
-    ): List<YtelseV1> {
-        val httpResponse =
-            httpKlient
-                .preparePost("$baseUrl/hent-ytelse-vedtakt") {
-                    header(NAV_CALL_ID_HEADER, behovId)
-                    header(XCorrelationId, behovId)
-                    accept(ContentType.Application.Json)
-                    contentType(ContentType.Application.Json)
-                    setBody(
-                        Request(
-                            ident = Ident(verdi = ident),
-                            periode = Periode(fom = fom, tom = tom),
-                            ytelser = Ytelser.entries,
-                        ),
-                    )
-                }.execute()
-        return when (httpResponse.status) {
-            HttpStatusCode.OK -> httpResponse.call.response.body()
-            else -> throw RuntimeException("error (responseCode=${httpResponse.status.value}) from Abakus")
-        }
-    }
+    ): List<YtelseV1> =
+        httpKlient
+            .post("$baseUrl/hent-ytelse-vedtakt") {
+                header(NAV_CALL_ID_HEADER, behovId)
+                header(XCorrelationId, behovId)
+                accept(ContentType.Application.Json)
+                contentType(ContentType.Application.Json)
+                setBody(
+                    Request(
+                        ident = Ident(verdi = ident),
+                        periode = Periode(fom = fom, tom = tom),
+                        ytelser = Ytelser.entries,
+                    ),
+                )
+            }.body()
 }
