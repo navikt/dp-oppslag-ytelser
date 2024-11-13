@@ -3,6 +3,7 @@ package no.nav.dagpenger.andre.ytelser
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.RapidsConnection
 import mu.KotlinLogging
 import no.nav.dagpenger.andre.ytelser.abakus.AbakusClient
+import no.nav.dagpenger.andre.ytelser.sykepenger.SykepengerClient
 import no.nav.helse.rapids_rivers.RapidApplication
 
 fun main() {
@@ -16,10 +17,16 @@ fun main() {
 
     val abakusClient by lazy {
         AbakusClient(
-            baseUrl = Configuration.abakusBaseUrl(),
+            baseUrl = Configuration.abakusUrl(),
             tokenProvider = Configuration.abakusTokenProvider(),
         )
     }
+
+    val sykepenger =
+        SykepengerClient(
+            baseUrl = Configuration.sykepengerUrl(),
+            tokenProvider = Configuration.sykepengerTokenProvider(),
+        )
 
     RapidApplication
         .create(Configuration.config)

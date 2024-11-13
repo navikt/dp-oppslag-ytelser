@@ -17,6 +17,7 @@ internal class AbakusClientTest {
     fun `skal klare å deserialisere bodyen som returneres`() {
         val mockEngine =
             MockEngine { request ->
+                request.url.toString() shouldBe "https://fpabakus.dev-fss-pub.nais.io/fpabakus/ekstern/api/ytelse/v1/hent-ytelse-vedtakt"
                 respond(
                     content = enkeltSvar,
                     status = HttpStatusCode.OK,

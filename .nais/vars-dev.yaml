@@ -1,2 +1,5 @@
 kafka:
   pool: nav-dev
+
+cluster:
+  fss: dev-fss

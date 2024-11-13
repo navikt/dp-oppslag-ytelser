@@ -27,16 +27,20 @@ object Configuration {
         ConfigurationMap(
             mapOf(
                 "application.profile" to Profile.DEV.toString(),
-                "abakusScope" to "api://dev-fss.teamforeldrepenger.fpabakus/.default",
-                "abakusBaseUrl" to "http://fpabakus.teamforeldrepenger",
+                "abakus.scope" to "api://dev-fss.teamforeldrepenger.fpabakus/.default",
+                "abakus.url" to "https://fpabakus.dev-fss-pub.nais.io/fpabakus/ekstern/api/ytelse/v1",
+                "sykepenger.scope" to "api://dev-gcp.tbd.spokelse/.default",
+                "sykepenger.url" to "https://spokelse.tbd",
             ),
         )
     private val prodProperties =
         ConfigurationMap(
             mapOf(
                 "application.profile" to Profile.PROD.toString(),
-                "abakusScope" to "api://prod-fss.teamforeldrepenger.fpabakus/.default",
-                "abakusBaseUrl" to "http://fpabakus.teamforeldrepenger",
+                "abakus.scope" to "api://prod-fss.teamforeldrepenger.fpabakus/.default",
+                "abakus.url" to "https://fpabakus.prod-fss-pub.nais.io/fpabakus/ekstern/api/ytelse/v1",
+                "sykepenger.scope" to "api://prod-gcp.tbd.spokelse/.default",
+                "sykepenger.url" to "https://spokelse.tbd",
             ),
         )
 
@@ -58,9 +62,13 @@ object Configuration {
             map + pair.second
         }
 
-    fun abakusTokenProvider(): () -> String = azureAdTokenSupplier(config()[Key("abakusScope", stringType)])
+    fun abakusTokenProvider(): () -> String = azureAdTokenSupplier(config()[Key("abakus.scope", stringType)])
 
-    fun abakusBaseUrl(): String = config()[Key("abakusBaseUrl", stringType)]
+    fun sykepengerTokenProvider(): () -> String = azureAdTokenSupplier(config()[Key("sykepenger.scope", stringType)])
+
+    fun abakusUrl(): String = config()[Key("abakus.url", stringType)]
+
+    fun sykepengerUrl(): String = config()[Key("sykepenger.url", stringType)]
 
     private val azureAdClient: CachedOauth2Client by lazy {
         val azureAdConfig = OAuth2Config.AzureAd(config())

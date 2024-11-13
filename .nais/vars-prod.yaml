@@ -1,2 +1,5 @@
 kafka:
   pool: nav-prod
+
+cluster:
+  fss: prod-fss

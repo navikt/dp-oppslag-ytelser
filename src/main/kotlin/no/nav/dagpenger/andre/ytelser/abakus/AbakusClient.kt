@@ -30,7 +30,7 @@ import java.time.Duration
 import java.time.LocalDate
 
 class AbakusClient(
-    private val baseUrl: String = Configuration.abakusBaseUrl(),
+    private val baseUrl: String = Configuration.abakusUrl(),
     httpClientEngine: HttpClientEngine = CIO.create { requestTimeout = Long.MAX_VALUE },
     private val tokenProvider: () -> String,
 ) {
@@ -65,7 +65,7 @@ class AbakusClient(
     ): List<YtelseV1> {
         val httpResponse =
             httpKlient
-                .preparePost("$baseUrl/fpabakus/ekstern/api/ytelse/v1/hent-ytelse-vedtak") {
+                .preparePost("$baseUrl/hent-ytelse-vedtakt") {
                     header(NAV_CALL_ID_HEADER, behovId)
                     header(XCorrelationId, behovId)
                     accept(ContentType.Application.Json)
@@ -74,7 +74,7 @@ class AbakusClient(
                         Request(
                             ident = Ident(verdi = ident),
                             periode = Periode(fom = fom, tom = tom),
-                            ytelser = Ytelser.values().toList(),
+                            ytelser = Ytelser.entries,
                         ),
                     )
                 }.execute()
@@ -83,8 +83,4 @@ class AbakusClient(
             else -> throw RuntimeException("error (responseCode=${httpResponse.status.value}) from Abakus")
         }
     }
-
-    data class AbakusClientConfig(
-        val baseUrl: String,
-    )
 }
