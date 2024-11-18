@@ -5,6 +5,7 @@ import mu.KotlinLogging
 import no.nav.dagpenger.andre.ytelser.abakus.AbakusClient
 import no.nav.dagpenger.andre.ytelser.abakus.ForeldrepengerService
 import no.nav.dagpenger.andre.ytelser.sykepenger.SykepengerClient
+import no.nav.dagpenger.andre.ytelser.sykepenger.SykepengerService
 import no.nav.helse.rapids_rivers.RapidApplication
 
 fun main() {
@@ -35,6 +36,11 @@ fun main() {
             ForeldrepengerService(
                 rapidsConnection = this,
                 client = abakusClient,
+            )
+
+            SykepengerService(
+                rapidsConnection = this,
+                client = sykepenger,
             )
 
             register(

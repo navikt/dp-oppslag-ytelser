@@ -1,5 +1,6 @@
 package no.nav.dagpenger.andre.ytelser.sykepenger.modell
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import java.time.LocalDate
 
 data class Perioder(
@@ -10,4 +11,9 @@ data class Periode(
     val fom: LocalDate,
     val tom: LocalDate,
     val grad: Int,
-)
+    @JsonIgnore private val range: ClosedRange<LocalDate> = fom..tom,
+) {
+    operator fun contains(date: LocalDate): Boolean = date in range
+
+    override fun toString(): String = "Periode(fom=$fom, tom=$tom)"
+}

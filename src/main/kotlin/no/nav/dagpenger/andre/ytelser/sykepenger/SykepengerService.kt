@@ -1,4 +1,4 @@
-package no.nav.dagpenger.andre.ytelser.abakus
+package no.nav.dagpenger.andre.ytelser.sykepenger
 
 import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
 import com.github.navikt.tbd_libs.rapids_and_rivers.River
@@ -9,17 +9,15 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.slf4j.MDCContext
 import mu.KotlinLogging
 import mu.withLoggingContext
-import no.nav.dagpenger.andre.ytelser.abakus.modell.Periode
-import no.nav.dagpenger.andre.ytelser.abakus.modell.YtelseV1
-import no.nav.dagpenger.andre.ytelser.abakus.modell.Ytelser
+import no.nav.dagpenger.andre.ytelser.sykepenger.modell.Perioder
 
-class ForeldrepengerService(
+class SykepengerService(
     rapidsConnection: RapidsConnection,
-    private val client: AbakusClient,
+    private val client: SykepengerClient,
 ) : River.PacketListener {
     companion object {
         internal object BEHOV {
-            const val FORELDREPENGER_BEHOV = "Foreldrepenger"
+            const val SYKEPENGER_BEHOV = "Sykepenger"
         }
 
         private val logger = KotlinLogging.logger {}
@@ -30,10 +28,10 @@ class ForeldrepengerService(
         River(rapidsConnection)
             .apply {
                 validate {
-                    it.demandAllOrAny("@behov", listOf(BEHOV.FORELDREPENGER_BEHOV))
+                    it.demandAllOrAny("@behov", listOf(BEHOV.SYKEPENGER_BEHOV))
                     it.forbid("@løsning")
                     it.requireKey("ident")
-                    it.requireKey(BEHOV.FORELDREPENGER_BEHOV)
+                    it.requireKey(BEHOV.SYKEPENGER_BEHOV)
                     it.interestedIn("søknadId", "@behovId", "behandlingId")
                 }
             }.register(this)
@@ -48,28 +46,28 @@ class ForeldrepengerService(
             "behovId" to packet["@behovId"].asText(),
         ) {
             val ident = packet["ident"].asText()
-            val ønsketDato = packet[BEHOV.FORELDREPENGER_BEHOV]["Virkningsdato"].asLocalDate()
-            val periode = Periode(fom = ønsketDato.minusWeeks(8), tom = ønsketDato)
+            val ønsketDato = packet[BEHOV.SYKEPENGER_BEHOV]["Virkningsdato"].asLocalDate()
+            val fom = ønsketDato.minusWeeks(8)
+            val tom = ønsketDato
 
-            val ytelser: List<YtelseV1> =
+            val perioder: Perioder =
                 runBlocking(MDCContext()) {
-                    client.hentYtelser(ident, periode, listOf(Ytelser.FORELDREPENGER))
+                    client.hentSykepenger(ident, fom, tom)
                 }
 
-            val løsning = ytelser.harYtelse(Ytelser.FORELDREPENGER)
-            packet["@løsning"] = mapOf(BEHOV.FORELDREPENGER_BEHOV to løsning)
+            val løsning = perioder.utbetaltePerioder.any { ønsketDato in it }
+
+            packet["@løsning"] = mapOf(BEHOV.SYKEPENGER_BEHOV to løsning)
 
             // Ta med ufiltret respons for å sikre bedre sporing
             packet["@kilde"] =
                 mapOf(
-                    "navn" to "abakus-api",
-                    "data" to ytelser,
+                    "navn" to "spøkelse-api",
+                    "data" to perioder,
                 )
 
             logger.info { "løser behov '$BEHOV'" }
             context.publish(packet.toJson())
         }
     }
-
-    private fun List<YtelseV1>.harYtelse(ytelse: Ytelser): Boolean = this.any { it.ytelse == ytelse }
 }
