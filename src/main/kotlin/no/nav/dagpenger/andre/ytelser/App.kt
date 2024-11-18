@@ -3,6 +3,7 @@ package no.nav.dagpenger.andre.ytelser
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.RapidsConnection
 import mu.KotlinLogging
 import no.nav.dagpenger.andre.ytelser.abakus.AbakusClient
+import no.nav.dagpenger.andre.ytelser.abakus.ForeldrepengerService
 import no.nav.dagpenger.andre.ytelser.sykepenger.SykepengerClient
 import no.nav.helse.rapids_rivers.RapidApplication
 
@@ -31,10 +32,10 @@ fun main() {
     RapidApplication
         .create(Configuration.config)
         .apply {
-//            ForeldrepengerService(
-//                rapidsConnection = this,
-//                client = abakusClient,
-//            )
+            ForeldrepengerService(
+                rapidsConnection = this,
+                client = abakusClient,
+            )
 
             register(
                 object : RapidsConnection.StatusListener {

@@ -8,7 +8,9 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.headersOf
 import kotlinx.coroutines.runBlocking
+import no.nav.dagpenger.andre.ytelser.abakus.modell.Periode
 import no.nav.dagpenger.andre.ytelser.abakus.modell.YtelseV1
+import no.nav.dagpenger.andre.ytelser.abakus.modell.Ytelser
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 
@@ -36,9 +38,8 @@ internal class AbakusClientTest {
             runBlocking {
                 client.hentYtelser(
                     ident = "x",
-                    fom = LocalDate.MIN,
-                    tom = LocalDate.MAX,
-                    behovId = "y",
+                    periode = Periode(LocalDate.MIN, LocalDate.MAX),
+                    ytelser = listOf(Ytelser.FORELDREPENGER),
                 )
             }
         response.size shouldBe 1
@@ -65,9 +66,8 @@ internal class AbakusClientTest {
             runBlocking {
                 client.hentYtelser(
                     ident = "x",
-                    fom = LocalDate.MIN,
-                    tom = LocalDate.MAX,
-                    behovId = "y",
+                    periode = Periode(LocalDate.MIN, LocalDate.MAX),
+                    ytelser = listOf(Ytelser.FORELDREPENGER),
                 )
             }
         response.size shouldBe 2

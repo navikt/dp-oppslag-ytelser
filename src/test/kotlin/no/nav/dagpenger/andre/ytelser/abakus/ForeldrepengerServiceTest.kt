@@ -1,7 +1,6 @@
 package no.nav.dagpenger.andre.ytelser.abakus
 
 import com.github.navikt.tbd_libs.rapids_and_rivers.test_support.TestRapid
-import io.kotest.assertions.json.shouldEqualJson
 import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -13,46 +12,44 @@ import no.nav.dagpenger.andre.ytelser.abakus.modell.Periode
 import no.nav.dagpenger.andre.ytelser.abakus.modell.Status
 import no.nav.dagpenger.andre.ytelser.abakus.modell.YtelseV1
 import no.nav.dagpenger.andre.ytelser.abakus.modell.Ytelser
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-@Disabled
 internal class ForeldrepengerServiceTest {
     private val testRapid = TestRapid()
 
-    private val ident = "04927799109"
-    private val fom = LocalDate.of(2022, 1, 1)
-    private val tom = LocalDate.of(2022, 1, 31)
+    private val ident = "11109233444"
+    private val virkningsdato = LocalDate.of(2022, 1, 1)
+    private val periode = Periode(virkningsdato.minusWeeks(8), virkningsdato)
 
     private val abakusClient = mockk<AbakusClient>()
 
-    val service =
+    init {
         ForeldrepengerService(
             rapidsConnection = testRapid,
             client = abakusClient,
         )
-
-    @BeforeEach
-    fun reset() {
-        testRapid.reset()
     }
+
+//    @BeforeEach
+//    fun reset() {
+//        testRapid.reset()
+//    }
 
     @Test
     fun `Sjekk happy case`() {
-        coEvery { abakusClient.hentYtelser(any(), any(), any(), any()) } returns
+        coEvery { abakusClient.hentYtelser(ident, periode, listOf(Ytelser.FORELDREPENGER)) } returns
             listOf(
                 mockYtelse,
             )
 
-        testRapid.sendTestMessage(behovMelding)
+        testRapid.sendTestMessage(json)
 
         with(testRapid.inspektør) {
             size shouldBe 1
             field(0, "ident").asText() shouldBe ident
-            svar shouldEqualJson message(0).toPrettyString()
+            field(0, "@løsning")["Foreldrepenger"].asBoolean() shouldBe true
         }
     }
 
@@ -65,7 +62,7 @@ internal class ForeldrepengerServiceTest {
             version = "v1",
             aktør = Aktør(verdi = "aktørId"),
             vedtattTidspunkt = LocalDateTime.of(2022, 1, 1, 12, 0, 0, 0),
-            ytelse = Ytelser.PLEIEPENGER_SYKT_BARN,
+            ytelse = Ytelser.FORELDREPENGER,
             saksnummer = "sakNr",
             vedtakReferanse = "Ref",
             ytelseStatus = Status.LØPENDE,
@@ -91,67 +88,39 @@ internal class ForeldrepengerServiceTest {
                 ),
         )
 
-    private val svar =
+    // language=json
+    private val json =
         """
         {
-          "@løsning": {
-            "fpytelser": {
-              "ytelser": [
-                {
-                  "version": "v1",
-                  "aktør": "aktørId",
-                  "vedtattTidspunkt": "2022-01-01T12:00:00",
-                  "ytelse": "PLEIEPENGER_SYKT_BARN",
-                  "saksnummer": "sakNr",
-                  "vedtakReferanse": "Ref",
-                  "ytelseStatus": "LØPENDE",
-                  "kildesystem": "FPSAK",
-                  "periode": {
-                    "fom": "2022-01-01",
-                    "tom": "2022-01-31"
-                  },
-                  "tilleggsopplysninger": "Tillegg",
-                  "anvist": [
-                      {
-                        "periode": {
-                          "fom": "2022-01-01",
-                          "tom": "2022-01-31"
-                        },
-                        "beløp": 100.0,
-                        "dagsats": 50.0,
-                        "utbetalingsgrad": 10.0
-                      }
-                    ]
-                }
-              ],
-              "feil": null
-            }
-          }
-        }
-        """.trimIndent()
-
-    private val behovMelding =
-        """
-        {
-            "@event_name": "behov",
-            "@opprettet": "2023-01-17T12:50:54.875468981",
-            "@id": "f51435b1-c993-4ca8-92ff-f62f3d4f2ebc",
-            "@behovId": "dfe8e0cc-83ab-4182-96f8-6b5a49ce5b8b",
-            "@behov": [
-            "fpytelser"
-            ],
-            "journalpostId": "foobar3",
-            "tilstandtype": "AvventerForeldrepenger",
-            "ident": "$ident",
-            "fom": "$fom",
-            "tom": "$tom",
-            "system_read_count": 0,
-            "system_participating_services": [
+          "@event_name": "behov",
+          "@behovId": "83894fc2-6e45-4534-abd1-97a441c57b2f",
+          "@behov": [
+            "Foreldrepenger"
+          ],
+          "ident": "11109233444",
+          "behandlingId": "018e9e8d-35f3-7835-9569-5c59ec0737da",
+          "fagsakId": "123",
+          "søknadId": "4afce924-6cb4-4ab4-a92b-fe91e24f31bf",
+          "søknad_uuid": "4afce924-6cb4-4ab4-a92b-fe91e24f31bf",
+          "Foreldrepenger": {
+            "Virkningsdato": "$virkningsdato",
+            "InnsendtSøknadsId": {
+              "urn": "urn:soknad:4afce924-6cb4-4ab4-a92b-fe91e24f31bf"
+            },
+            "søknad_uuid": "4afce924-6cb4-4ab4-a92b-fe91e24f31bf"
+          },
+          "InnsendtSøknadsId": {
+            "urn": "urn:soknad:4afce924-6cb4-4ab4-a92b-fe91e24f31bf"
+          },
+          "@id": "0c60ca43-f54b-4a1b-9ab3-5646024a0815",
+          "@opprettet": "2024-04-02T13:23:58.789361",
+          "system_read_count": 0,
+          "system_participating_services": [
             {
-                "id": "f51435b1-c993-4ca8-92ff-f62f3d4f2ebc",
-                "time": "2023-01-17T12:50:54.895176586"
+              "id": "0c60ca43-f54b-4a1b-9ab3-5646024a0815",
+              "time": "2024-04-02T13:23:58.789361"
             }
-            ]
+          ]
         }
         """.trimIndent()
 }

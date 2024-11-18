@@ -18,6 +18,7 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpHeaders.XCorrelationId
 import io.ktor.http.contentType
 import io.ktor.serialization.jackson.JacksonConverter
+import mu.KotlinLogging
 import no.nav.dagpenger.andre.ytelser.Configuration
 import no.nav.dagpenger.andre.ytelser.JsonMapper.defaultObjectMapper
 import no.nav.dagpenger.andre.ytelser.abakus.modell.Ident
@@ -25,8 +26,8 @@ import no.nav.dagpenger.andre.ytelser.abakus.modell.Periode
 import no.nav.dagpenger.andre.ytelser.abakus.modell.Request
 import no.nav.dagpenger.andre.ytelser.abakus.modell.YtelseV1
 import no.nav.dagpenger.andre.ytelser.abakus.modell.Ytelser
+import org.slf4j.MDC
 import java.time.Duration
-import java.time.LocalDate
 
 class AbakusClient(
     private val baseUrl: String = Configuration.abakusUrl(),
@@ -35,6 +36,8 @@ class AbakusClient(
 ) {
     companion object {
         const val NAV_CALL_ID_HEADER = "Nav-Call-Id"
+        private val log = KotlinLogging.logger {}
+        private val sikkerlogg = KotlinLogging.logger("tjenestekall")
     }
 
     private val httpKlient =
@@ -58,21 +61,23 @@ class AbakusClient(
 
     suspend fun hentYtelser(
         ident: String,
-        fom: LocalDate,
-        tom: LocalDate,
-        behovId: String,
+        periode: Periode,
+        ytelser: List<Ytelser>,
     ): List<YtelseV1> =
         httpKlient
             .post("$baseUrl/hent-ytelse-vedtak") {
-                header(NAV_CALL_ID_HEADER, behovId)
-                header(XCorrelationId, behovId)
+                MDC.get("behandlingId")?.let { header(XCorrelationId, it) }
+                MDC.get("behovId")?.let { behovId ->
+                    header(HttpHeaders.XRequestId, behovId).also { log.info { "Legger ved behovId=$behovId" } }
+                    header(NAV_CALL_ID_HEADER, behovId)
+                }
                 accept(ContentType.Application.Json)
                 contentType(ContentType.Application.Json)
                 setBody(
                     Request(
                         ident = Ident(verdi = ident),
-                        periode = Periode(fom = fom, tom = tom),
-                        ytelser = Ytelser.entries,
+                        periode = periode,
+                        ytelser = ytelser,
                     ),
                 )
             }.body()
