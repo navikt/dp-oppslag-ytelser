@@ -21,8 +21,8 @@ internal class ForeldrepengerBehovløserTest {
     private val testRapid = TestRapid()
 
     private val ident = "11109233444"
-    private val virkningsdato = LocalDate.of(2022, 1, 1)
-    private val periode = Periode(virkningsdato.minusWeeks(8), virkningsdato)
+    private val prøvingsdato = LocalDate.of(2022, 1, 1)
+    private val periode = Periode(prøvingsdato, LocalDate.MAX)
 
     private val abakusClient = mockk<AbakusClient>()
 
@@ -99,7 +99,7 @@ internal class ForeldrepengerBehovløserTest {
           "søknadId": "4afce924-6cb4-4ab4-a92b-fe91e24f31bf",
           "søknad_uuid": "4afce924-6cb4-4ab4-a92b-fe91e24f31bf",
           "Foreldrepenger": {
-            "Virkningsdato": "$virkningsdato",
+            "Virkningsdato": "$prøvingsdato",
             "InnsendtSøknadsId": {
               "urn": "urn:soknad:4afce924-6cb4-4ab4-a92b-fe91e24f31bf"
             },
