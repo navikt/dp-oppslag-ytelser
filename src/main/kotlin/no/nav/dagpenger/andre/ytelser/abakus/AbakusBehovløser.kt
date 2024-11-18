@@ -12,28 +12,27 @@ import mu.withLoggingContext
 import no.nav.dagpenger.andre.ytelser.abakus.modell.Periode
 import no.nav.dagpenger.andre.ytelser.abakus.modell.YtelseV1
 import no.nav.dagpenger.andre.ytelser.abakus.modell.Ytelser
+import java.time.LocalDate
 
-class ForeldrepengerService(
+abstract class AbakusBehovløser(
     rapidsConnection: RapidsConnection,
     private val client: AbakusClient,
 ) : River.PacketListener {
-    companion object {
-        internal object BEHOV {
-            const val FORELDREPENGER_BEHOV = "Foreldrepenger"
-        }
+    abstract val behov: String
+    abstract val filtrertePåYtelse: List<Ytelser>
 
+    companion object {
         private val logger = KotlinLogging.logger {}
-        private val sikkerlogg = KotlinLogging.logger("tjenestekall")
     }
 
     init {
         River(rapidsConnection)
             .apply {
                 validate {
-                    it.demandAllOrAny("@behov", listOf(BEHOV.FORELDREPENGER_BEHOV))
+                    it.demandAllOrAny("@behov", listOf(behov))
                     it.forbid("@løsning")
                     it.requireKey("ident")
-                    it.requireKey(BEHOV.FORELDREPENGER_BEHOV)
+                    it.requireKey(behov)
                     it.interestedIn("søknadId", "@behovId", "behandlingId")
                 }
             }.register(this)
@@ -48,16 +47,16 @@ class ForeldrepengerService(
             "behovId" to packet["@behovId"].asText(),
         ) {
             val ident = packet["ident"].asText()
-            val ønsketDato = packet[BEHOV.FORELDREPENGER_BEHOV]["Virkningsdato"].asLocalDate()
-            val periode = Periode(fom = ønsketDato.minusWeeks(8), tom = ønsketDato)
+            val prøvingsdato = packet[behov]["Virkningsdato"].asLocalDate()
+            val periode = Periode(fom = prøvingsdato, tom = LocalDate.MAX)
 
             val ytelser: List<YtelseV1> =
                 runBlocking(MDCContext()) {
-                    client.hentYtelser(ident, periode, listOf(Ytelser.FORELDREPENGER))
+                    client.hentYtelser(ident, periode, filtrertePåYtelse)
                 }
 
-            val løsning = ytelser.harYtelse(Ytelser.FORELDREPENGER)
-            packet["@løsning"] = mapOf(BEHOV.FORELDREPENGER_BEHOV to løsning)
+            val løsning = ytelser.any { it.ytelse in filtrertePåYtelse }
+            packet["@løsning"] = mapOf(behov to løsning)
 
             // Ta med ufiltret respons for å sikre bedre sporing
             packet["@kilde"] =
@@ -66,10 +65,8 @@ class ForeldrepengerService(
                     "data" to ytelser,
                 )
 
-            logger.info { "løser behov '$BEHOV'" }
+            logger.info { "løser behov '$behov'" }
             context.publish(packet.toJson())
         }
     }
-
-    private fun List<YtelseV1>.harYtelse(ytelse: Ytelser): Boolean = this.any { it.ytelse == ytelse }
 }

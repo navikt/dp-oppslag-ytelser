@@ -1,9 +1,10 @@
-package no.nav.dagpenger.andre.ytelser.abakus
+package no.nav.dagpenger.andre.ytelser.abakus.behovløsere
 
 import com.github.navikt.tbd_libs.rapids_and_rivers.test_support.TestRapid
 import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
 import io.mockk.mockk
+import no.nav.dagpenger.andre.ytelser.abakus.AbakusClient
 import no.nav.dagpenger.andre.ytelser.abakus.modell.Aktør
 import no.nav.dagpenger.andre.ytelser.abakus.modell.Anvisning
 import no.nav.dagpenger.andre.ytelser.abakus.modell.Desimaltall
@@ -16,30 +17,33 @@ import org.junit.jupiter.api.Test
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-internal class ForeldrepengerServiceTest {
+/***
+ *     val pleiepenger = Opplysningstype.somBoolsk("Pleiepenger etter lovens kapittel 9".id(Pleienger))
+ *     val omsorgspenger = Opplysningstype.somBoolsk("Omsorgspenger etter lovens kapittel 9".id(Omsorgspenger))
+ *     val opplæringspenger = Opplysningstype.somBoolsk("Opplæringspenger etter lovens kapittel 9".id(Opplæringspenger))
+ *     val foreldrepenger = Opplysningstype.somBoolsk("Foreldrepenger etter lovens kapittel 14".id(Foreldrepenger))
+ *     val svangerskapspenger = Opplysningstype.somBoolsk("Svangerskapspenger etter lovens kapittel 14".id(Svangerskapspenger))
+ */
+
+internal class OmsorgspengerBehovløserTest {
     private val testRapid = TestRapid()
 
     private val ident = "11109233444"
-    private val virkningsdato = LocalDate.of(2022, 1, 1)
-    private val periode = Periode(virkningsdato.minusWeeks(8), virkningsdato)
+    private val prøvingsdato = LocalDate.of(2022, 1, 1)
+    private val periode = Periode(prøvingsdato, LocalDate.MAX)
 
     private val abakusClient = mockk<AbakusClient>()
 
     init {
-        ForeldrepengerService(
+        OmsorgspengerBehovløser(
             rapidsConnection = testRapid,
             client = abakusClient,
         )
     }
 
-//    @BeforeEach
-//    fun reset() {
-//        testRapid.reset()
-//    }
-
     @Test
     fun `Sjekk happy case`() {
-        coEvery { abakusClient.hentYtelser(ident, periode, listOf(Ytelser.FORELDREPENGER)) } returns
+        coEvery { abakusClient.hentYtelser(ident, periode, listOf(Ytelser.OMSORGSPENGER)) } returns
             listOf(
                 mockYtelse,
             )
@@ -49,7 +53,7 @@ internal class ForeldrepengerServiceTest {
         with(testRapid.inspektør) {
             size shouldBe 1
             field(0, "ident").asText() shouldBe ident
-            field(0, "@løsning")["Foreldrepenger"].asBoolean() shouldBe true
+            field(0, "@løsning")["Omsorgspenger"].asBoolean() shouldBe true
         }
     }
 
@@ -62,7 +66,7 @@ internal class ForeldrepengerServiceTest {
             version = "v1",
             aktør = Aktør(verdi = "aktørId"),
             vedtattTidspunkt = LocalDateTime.of(2022, 1, 1, 12, 0, 0, 0),
-            ytelse = Ytelser.FORELDREPENGER,
+            ytelse = Ytelser.OMSORGSPENGER,
             saksnummer = "sakNr",
             vedtakReferanse = "Ref",
             ytelseStatus = Status.LØPENDE,
@@ -95,15 +99,15 @@ internal class ForeldrepengerServiceTest {
           "@event_name": "behov",
           "@behovId": "83894fc2-6e45-4534-abd1-97a441c57b2f",
           "@behov": [
-            "Foreldrepenger"
+            "Omsorgspenger"
           ],
           "ident": "11109233444",
           "behandlingId": "018e9e8d-35f3-7835-9569-5c59ec0737da",
           "fagsakId": "123",
           "søknadId": "4afce924-6cb4-4ab4-a92b-fe91e24f31bf",
           "søknad_uuid": "4afce924-6cb4-4ab4-a92b-fe91e24f31bf",
-          "Foreldrepenger": {
-            "Virkningsdato": "$virkningsdato",
+          "Omsorgspenger": {
+            "Virkningsdato": "$prøvingsdato",
             "InnsendtSøknadsId": {
               "urn": "urn:soknad:4afce924-6cb4-4ab4-a92b-fe91e24f31bf"
             },
