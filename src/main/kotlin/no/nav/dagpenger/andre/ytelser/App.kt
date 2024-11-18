@@ -4,6 +4,10 @@ import com.github.navikt.tbd_libs.rapids_and_rivers_api.RapidsConnection
 import mu.KotlinLogging
 import no.nav.dagpenger.andre.ytelser.abakus.AbakusClient
 import no.nav.dagpenger.andre.ytelser.abakus.behovløsere.ForeldrepengerBehovløser
+import no.nav.dagpenger.andre.ytelser.abakus.behovløsere.OmsorgspengerBehovløser
+import no.nav.dagpenger.andre.ytelser.abakus.behovløsere.OpplæringspengerBehovløser
+import no.nav.dagpenger.andre.ytelser.abakus.behovløsere.PleiengerBehovløser
+import no.nav.dagpenger.andre.ytelser.abakus.behovløsere.SvangerskapspengerBehovløser
 import no.nav.dagpenger.andre.ytelser.sykepenger.SykepengerClient
 import no.nav.dagpenger.andre.ytelser.sykepenger.SykepengerService
 import no.nav.helse.rapids_rivers.RapidApplication
@@ -37,7 +41,22 @@ fun main() {
                 rapidsConnection = this,
                 client = abakusClient,
             )
-
+            OmsorgspengerBehovløser(
+                rapidsConnection = this,
+                client = abakusClient,
+            )
+            PleiengerBehovløser(
+                rapidsConnection = this,
+                client = abakusClient,
+            )
+            SvangerskapspengerBehovløser(
+                rapidsConnection = this,
+                client = abakusClient,
+            )
+            OpplæringspengerBehovløser(
+                rapidsConnection = this,
+                client = abakusClient,
+            )
             SykepengerService(
                 rapidsConnection = this,
                 client = sykepenger,
