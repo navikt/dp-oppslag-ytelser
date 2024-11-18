@@ -1,23 +1,21 @@
-package no.nav.dagpenger.andre.ytelser
+package no.nav.dagpenger.andre.ytelser.abakus
 
 import com.github.navikt.tbd_libs.rapids_and_rivers.test_support.TestRapid
+import io.kotest.assertions.json.shouldEqualJson
 import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
 import io.mockk.mockk
-import no.nav.dagpenger.andre.ytelser.abakus.AbakusClient
-import no.nav.dagpenger.andre.ytelser.abakus.models.Aktør
-import no.nav.dagpenger.andre.ytelser.abakus.models.Anvisning
-import no.nav.dagpenger.andre.ytelser.abakus.models.Desimaltall
-import no.nav.dagpenger.andre.ytelser.abakus.models.Kildesystem
-import no.nav.dagpenger.andre.ytelser.abakus.models.Periode
-import no.nav.dagpenger.andre.ytelser.abakus.models.Status
-import no.nav.dagpenger.andre.ytelser.abakus.models.YtelseV1
-import no.nav.dagpenger.andre.ytelser.abakus.models.Ytelser
+import no.nav.dagpenger.andre.ytelser.abakus.modell.Aktør
+import no.nav.dagpenger.andre.ytelser.abakus.modell.Anvisning
+import no.nav.dagpenger.andre.ytelser.abakus.modell.Desimaltall
+import no.nav.dagpenger.andre.ytelser.abakus.modell.Kildesystem
+import no.nav.dagpenger.andre.ytelser.abakus.modell.Periode
+import no.nav.dagpenger.andre.ytelser.abakus.modell.Status
+import no.nav.dagpenger.andre.ytelser.abakus.modell.YtelseV1
+import no.nav.dagpenger.andre.ytelser.abakus.modell.Ytelser
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
-import org.skyscreamer.jsonassert.JSONAssert
-import org.skyscreamer.jsonassert.JSONCompareMode
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -54,13 +52,7 @@ internal class ForeldrepengerServiceTest {
         with(testRapid.inspektør) {
             size shouldBe 1
             field(0, "ident").asText() shouldBe ident
-
-            println(message(0).toPrettyString())
-            JSONAssert.assertEquals(
-                svar,
-                message(0).toPrettyString(),
-                JSONCompareMode.LENIENT,
-            )
+            svar shouldEqualJson message(0).toPrettyString()
         }
     }
 

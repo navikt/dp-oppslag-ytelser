@@ -16,7 +16,7 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.serialization.jackson.JacksonConverter
 import no.nav.dagpenger.andre.ytelser.Configuration
-import no.nav.dagpenger.andre.ytelser.defaultObjectMapper
+import no.nav.dagpenger.andre.ytelser.JsonMapper.defaultObjectMapper
 import no.nav.dagpenger.andre.ytelser.sykepenger.modell.Perioder
 import no.nav.dagpenger.andre.ytelser.sykepenger.modell.SykpengerRequest
 import java.time.Duration
@@ -31,7 +31,7 @@ class SykepengerClient(
         HttpClient(httpClientEngine) {
             expectSuccess = true
             install(ContentNegotiation) {
-                register(ContentType.Application.Json, JacksonConverter(defaultObjectMapper()))
+                register(ContentType.Application.Json, JacksonConverter(defaultObjectMapper))
             }
             install(Logging) {
                 level = LogLevel.INFO

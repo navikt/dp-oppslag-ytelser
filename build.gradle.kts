@@ -39,9 +39,8 @@ dependencies {
     testImplementation(libs.rapids.and.rivers.test)
     testImplementation(libs.kotest.assertions.core)
     testImplementation(libs.mockk)
+    testImplementation(libs.bundles.kotest.assertions)
     testImplementation("io.ktor:ktor-client-mock:$ktorVersion")
-    testImplementation("io.kotest.extensions:kotest-assertions-arrow:1.4.0")
-    testImplementation("org.skyscreamer:jsonassert:1.5.3")
 }
 
 configurations.all {

@@ -1,4 +1,4 @@
-package no.nav.dagpenger.andre.ytelser.abakus.models
+package no.nav.dagpenger.andre.ytelser.abakus.modell
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 

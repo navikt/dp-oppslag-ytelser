@@ -1,4 +1,4 @@
-package no.nav.dagpenger.andre.ytelser
+package no.nav.dagpenger.andre.ytelser.abakus.modell
 
 import java.math.BigDecimal
 import java.time.LocalDate

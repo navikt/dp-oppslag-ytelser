@@ -8,7 +8,7 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.headersOf
 import kotlinx.coroutines.runBlocking
-import no.nav.dagpenger.andre.ytelser.abakus.models.YtelseV1
+import no.nav.dagpenger.andre.ytelser.abakus.modell.YtelseV1
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 
@@ -17,7 +17,7 @@ internal class AbakusClientTest {
     fun `skal klare å deserialisere bodyen som returneres`() {
         val mockEngine =
             MockEngine { request ->
-                request.url.toString() shouldBe "https://fpabakus.dev-fss-pub.nais.io/fpabakus/ekstern/api/ytelse/v1/hent-ytelse-vedtakt"
+                request.url.toString() shouldBe "https://fpabakus.dev-fss-pub.nais.io/fpabakus/ekstern/api/ytelse/v1/hent-ytelse-vedtak"
                 request.headers[HttpHeaders.Authorization] shouldBe "Bearer token"
                 respond(
                     content = enkeltSvar,

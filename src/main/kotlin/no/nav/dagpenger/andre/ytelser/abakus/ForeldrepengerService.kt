@@ -1,4 +1,4 @@
-package no.nav.dagpenger.andre.ytelser
+package no.nav.dagpenger.andre.ytelser.abakus
 
 import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
 import com.github.navikt.tbd_libs.rapids_and_rivers.River
@@ -9,23 +9,19 @@ import kotlinx.coroutines.slf4j.MDCContext
 import mu.KotlinLogging
 import mu.withLoggingContext
 import net.logstash.logback.argument.StructuredArguments
-import no.nav.dagpenger.andre.ytelser.FPResponsDTO.AnvisningDTO
-import no.nav.dagpenger.andre.ytelser.FPResponsDTO.KildesystemDTO
-import no.nav.dagpenger.andre.ytelser.FPResponsDTO.PeriodeDTO
-import no.nav.dagpenger.andre.ytelser.FPResponsDTO.StatusDTO
-import no.nav.dagpenger.andre.ytelser.FPResponsDTO.YtelseV1DTO
-import no.nav.dagpenger.andre.ytelser.FPResponsDTO.YtelserOutput
-import no.nav.dagpenger.andre.ytelser.abakus.AbakusClient
-import no.nav.dagpenger.andre.ytelser.abakus.models.Anvisning
-import no.nav.dagpenger.andre.ytelser.abakus.models.Kildesystem
-import no.nav.dagpenger.andre.ytelser.abakus.models.Periode
-import no.nav.dagpenger.andre.ytelser.abakus.models.Status
-import no.nav.dagpenger.andre.ytelser.abakus.models.YtelseV1
-import no.nav.dagpenger.andre.ytelser.abakus.models.Ytelser
+import no.nav.dagpenger.andre.ytelser.abakus.modell.Anvisning
+import no.nav.dagpenger.andre.ytelser.abakus.modell.FPResponsDTO.AnvisningDTO
+import no.nav.dagpenger.andre.ytelser.abakus.modell.FPResponsDTO.KildesystemDTO
+import no.nav.dagpenger.andre.ytelser.abakus.modell.FPResponsDTO.PeriodeDTO
+import no.nav.dagpenger.andre.ytelser.abakus.modell.FPResponsDTO.StatusDTO
+import no.nav.dagpenger.andre.ytelser.abakus.modell.FPResponsDTO.YtelseV1DTO
+import no.nav.dagpenger.andre.ytelser.abakus.modell.FPResponsDTO.YtelserOutput
+import no.nav.dagpenger.andre.ytelser.abakus.modell.Kildesystem
+import no.nav.dagpenger.andre.ytelser.abakus.modell.Periode
+import no.nav.dagpenger.andre.ytelser.abakus.modell.Status
+import no.nav.dagpenger.andre.ytelser.abakus.modell.YtelseV1
+import no.nav.dagpenger.andre.ytelser.abakus.modell.Ytelser
 import java.time.LocalDate
-
-private val LOG = KotlinLogging.logger {}
-private val SECURELOG = KotlinLogging.logger("tjenestekall")
 
 class ForeldrepengerService(
     rapidsConnection: RapidsConnection,
@@ -35,6 +31,9 @@ class ForeldrepengerService(
         internal object BEHOV {
             const val FP_YTELSER = "fpytelser"
         }
+
+        private val logger = KotlinLogging.logger {}
+        private val sikkerlogg = KotlinLogging.logger("tjenestekall")
     }
 
     init {
@@ -63,7 +62,7 @@ class ForeldrepengerService(
             ) {
                 val ident = packet["ident"].asText()
                 val behovId = packet["@behovId"].asText()
-                SECURELOG.debug { "mottok ident $ident" }
+                sikkerlogg.debug { "mottok ident $ident" }
                 val fom: String = packet["fom"].asText("1970-01-01")
                 val tom: String = packet["tom"].asText("9999-12-31")
 
@@ -76,7 +75,7 @@ class ForeldrepengerService(
                             tempFom
                         }
                     } catch (e: Exception) {
-                        LOG.warn("Klarte ikke å parse fom $fom", e)
+                        logger.warn("Klarte ikke å parse fom $fom", e)
                         LocalDate.EPOCH
                     }
 
@@ -89,7 +88,7 @@ class ForeldrepengerService(
                             tempTom
                         }
                     } catch (e: Exception) {
-                        LOG.warn("Klarte ikke å parse tom $tom", e)
+                        logger.warn("Klarte ikke å parse tom $tom", e)
                         LocalDate.of(9999, 12, 31)
                     }
 
@@ -193,42 +192,42 @@ class ForeldrepengerService(
         }
 
     fun loggVedInngang(packet: JsonMessage) {
-        LOG.info(
+        logger.info(
             "løser fp-behov med {} og {}",
             StructuredArguments.keyValue("id", packet["@id"].asText()),
             StructuredArguments.keyValue("behovId", packet["@behovId"].asText()),
         )
-        SECURELOG.info(
+        sikkerlogg.info(
             "løser fp-behov med {} og {}",
             StructuredArguments.keyValue("id", packet["@id"].asText()),
             StructuredArguments.keyValue("behovId", packet["@behovId"].asText()),
         )
-        SECURELOG.debug { "mottok melding: ${packet.toJson()}" }
+        sikkerlogg.debug { "mottok melding: ${packet.toJson()}" }
     }
 
     private fun loggVedUtgang(packet: JsonMessage) {
-        LOG.info(
+        logger.info(
             "har løst fp-behov med {} og {}",
             StructuredArguments.keyValue("id", packet["@id"].asText()),
             StructuredArguments.keyValue("behovId", packet["@behovId"].asText()),
         )
-        SECURELOG.info(
+        sikkerlogg.info(
             "har løst fp-behov med {} og {}",
             StructuredArguments.keyValue("id", packet["@id"].asText()),
             StructuredArguments.keyValue("behovId", packet["@behovId"].asText()),
         )
-        SECURELOG.debug { "publiserer melding: ${packet.toJson()}" }
+        sikkerlogg.debug { "publiserer melding: ${packet.toJson()}" }
     }
 
     private fun loggVedFeil(
         ex: Throwable,
         packet: JsonMessage,
     ) {
-        LOG.error(
+        logger.error(
             "feil ved behandling av fp-behov med {}, se securelogs for detaljer",
             StructuredArguments.keyValue("id", packet["@id"].asText()),
         )
-        SECURELOG.error(
+        sikkerlogg.error(
             "feil \"${ex.message}\" ved behandling av fp-behov med {} og {}",
             StructuredArguments.keyValue("id", packet["@id"].asText()),
             StructuredArguments.keyValue("packet", packet.toJson()),

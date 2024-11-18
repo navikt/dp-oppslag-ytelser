@@ -1,8 +1,8 @@
-package no.nav.dagpenger.andre.ytelser.abakus.models
+package no.nav.dagpenger.andre.ytelser.abakus.modell
 
+import io.kotest.assertions.json.shouldEqualJson
+import no.nav.dagpenger.andre.ytelser.JsonMapper.defaultObjectMapper
 import org.junit.jupiter.api.Test
-import org.skyscreamer.jsonassert.JSONAssert
-import org.skyscreamer.jsonassert.JSONCompareMode
 import java.time.LocalDate
 
 internal class RequestTest {
@@ -24,16 +24,8 @@ internal class RequestTest {
                 ytelser = listOf(Ytelser.ENGANGSTØNAD, Ytelser.FORELDREPENGER),
             )
 
-        val mapper =
-            no.nav.dagpenger.andre.ytelser
-                .defaultObjectMapper()
-
-        val result = mapper.writeValueAsString(request)
-        JSONAssert.assertEquals(
-            expectedJson,
-            result,
-            JSONCompareMode.STRICT,
-        )
+        val result = defaultObjectMapper.writeValueAsString(request)
+        result shouldEqualJson expectedJson
     }
 
     @Test
@@ -54,15 +46,7 @@ internal class RequestTest {
                 ytelser = listOf(Ytelser.ENGANGSTØNAD, Ytelser.FORELDREPENGER),
             )
 
-        val mapper =
-            no.nav.dagpenger.andre.ytelser
-                .defaultObjectMapper()
-
-        val result = mapper.writeValueAsString(request)
-        JSONAssert.assertEquals(
-            expectedJson,
-            result,
-            JSONCompareMode.STRICT,
-        )
+        val result = defaultObjectMapper.writeValueAsString(request)
+        result shouldEqualJson expectedJson
     }
 }

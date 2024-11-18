@@ -19,12 +19,12 @@ import io.ktor.http.HttpHeaders.XCorrelationId
 import io.ktor.http.contentType
 import io.ktor.serialization.jackson.JacksonConverter
 import no.nav.dagpenger.andre.ytelser.Configuration
-import no.nav.dagpenger.andre.ytelser.abakus.models.Ident
-import no.nav.dagpenger.andre.ytelser.abakus.models.Periode
-import no.nav.dagpenger.andre.ytelser.abakus.models.Request
-import no.nav.dagpenger.andre.ytelser.abakus.models.YtelseV1
-import no.nav.dagpenger.andre.ytelser.abakus.models.Ytelser
-import no.nav.dagpenger.andre.ytelser.defaultObjectMapper
+import no.nav.dagpenger.andre.ytelser.JsonMapper.defaultObjectMapper
+import no.nav.dagpenger.andre.ytelser.abakus.modell.Ident
+import no.nav.dagpenger.andre.ytelser.abakus.modell.Periode
+import no.nav.dagpenger.andre.ytelser.abakus.modell.Request
+import no.nav.dagpenger.andre.ytelser.abakus.modell.YtelseV1
+import no.nav.dagpenger.andre.ytelser.abakus.modell.Ytelser
 import java.time.Duration
 import java.time.LocalDate
 
@@ -41,7 +41,7 @@ class AbakusClient(
         HttpClient(httpClientEngine) {
             expectSuccess = true
             install(ContentNegotiation) {
-                register(ContentType.Application.Json, JacksonConverter(defaultObjectMapper()))
+                register(ContentType.Application.Json, JacksonConverter(defaultObjectMapper))
             }
             install(Logging) {
                 level = LogLevel.INFO
@@ -63,7 +63,7 @@ class AbakusClient(
         behovId: String,
     ): List<YtelseV1> =
         httpKlient
-            .post("$baseUrl/hent-ytelse-vedtakt") {
+            .post("$baseUrl/hent-ytelse-vedtak") {
                 header(NAV_CALL_ID_HEADER, behovId)
                 header(XCorrelationId, behovId)
                 accept(ContentType.Application.Json)
