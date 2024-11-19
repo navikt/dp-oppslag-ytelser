@@ -19,7 +19,7 @@ class SykepengerClientTest {
             val mockEngine =
                 MockEngine { request ->
                     request.url.toString() shouldBe
-                        "https://spokelse.tbd/utbetalte-perioder-dagpenger"
+                        "http://spokelse.tbd/utbetalte-perioder-dagpenger"
                     request.headers[HttpHeaders.Authorization] shouldBe "Bearer token"
                     respond(
                         // language=json
