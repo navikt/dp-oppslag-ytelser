@@ -30,7 +30,7 @@ object Configuration {
                 "abakus.scope" to "api://dev-fss.teamforeldrepenger.fpabakus/.default",
                 "abakus.url" to "https://fpabakus.dev-fss-pub.nais.io/fpabakus/ekstern/api/ytelse/v1",
                 "sykepenger.scope" to "api://dev-gcp.tbd.spokelse/.default",
-                "sykepenger.url" to "https://spokelse.tbd",
+                "sykepenger.url" to "http://spokelse.tbd",
             ),
         )
     private val prodProperties =
@@ -40,7 +40,7 @@ object Configuration {
                 "abakus.scope" to "api://prod-fss.teamforeldrepenger.fpabakus/.default",
                 "abakus.url" to "https://fpabakus.prod-fss-pub.nais.io/fpabakus/ekstern/api/ytelse/v1",
                 "sykepenger.scope" to "api://prod-gcp.tbd.spokelse/.default",
-                "sykepenger.url" to "https://spokelse.tbd",
+                "sykepenger.url" to "http://spokelse.tbd",
             ),
         )
 
