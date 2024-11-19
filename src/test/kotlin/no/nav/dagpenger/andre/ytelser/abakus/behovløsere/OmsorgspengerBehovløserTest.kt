@@ -26,7 +26,7 @@ internal class OmsorgspengerBehovløserTest {
 
     private val ident = "11109233444"
     private val prøvingsdato = LocalDate.of(2022, 1, 1)
-    private val periode = Periode(prøvingsdato, LocalDate.MAX)
+    private val periode = Periode(prøvingsdato, prøvingsdato)
 
     private val abakusClient = mockk<AbakusClient>()
 

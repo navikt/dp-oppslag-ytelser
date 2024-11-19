@@ -12,7 +12,6 @@ import mu.withLoggingContext
 import no.nav.dagpenger.andre.ytelser.abakus.modell.Periode
 import no.nav.dagpenger.andre.ytelser.abakus.modell.YtelseV1
 import no.nav.dagpenger.andre.ytelser.abakus.modell.Ytelser
-import java.time.LocalDate
 
 abstract class AbakusBehovløser(
     rapidsConnection: RapidsConnection,
@@ -48,7 +47,7 @@ abstract class AbakusBehovløser(
         ) {
             val ident = packet["ident"].asText()
             val prøvingsdato = packet[behov]["Virkningsdato"].asLocalDate()
-            val periode = Periode(fom = prøvingsdato, tom = LocalDate.MAX)
+            val periode = Periode(fom = prøvingsdato, tom = prøvingsdato)
 
             val ytelser: List<YtelseV1> =
                 runBlocking(MDCContext()) {
