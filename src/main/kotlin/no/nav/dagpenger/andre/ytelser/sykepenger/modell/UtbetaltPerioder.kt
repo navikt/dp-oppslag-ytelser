@@ -15,5 +15,5 @@ data class Periode(
 ) {
     operator fun contains(date: LocalDate): Boolean = date in range
 
-    override fun toString(): String = "Periode(fom=$fom, tom=$tom)"
+    override fun toString(): String = "Periode(fom=$fom, tom=$tom), grad=$grad"
 }

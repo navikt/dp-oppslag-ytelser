@@ -66,7 +66,7 @@ class SykepengerService(
                     "data" to perioder,
                 )
 
-            logger.info { "løser behov '$BEHOV'" }
+            logger.info { "løser behov '$BEHOV' - Sykepengeperioder: $perioder" }
             context.publish(packet.toJson())
         }
     }
