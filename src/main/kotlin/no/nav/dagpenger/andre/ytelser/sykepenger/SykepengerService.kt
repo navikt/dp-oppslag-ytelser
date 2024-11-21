@@ -62,8 +62,11 @@ class SykepengerService(
             // Ta med ufiltret respons for å sikre bedre sporing
             packet["@kilde"] =
                 mapOf(
-                    "navn" to "spøkelse-api",
-                    "data" to perioder,
+                    BEHOV.SYKEPENGER_BEHOV to
+                        mapOf(
+                            "navn" to "spøkelse-api",
+                            "data" to perioder,
+                        ),
                 )
 
             logger.info { "løser behov '$BEHOV' - Sykepengeperioder: $perioder" }

@@ -1,6 +1,7 @@
 package no.nav.dagpenger.andre.ytelser.sykepenger
 
 import com.github.navikt.tbd_libs.rapids_and_rivers.test_support.TestRapid
+import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -35,6 +36,7 @@ internal class SykepengerServiceTest {
             size shouldBe 1
             field(0, "ident").asText() shouldBe ident
             field(0, "@løsning")["Sykepenger"].asBoolean() shouldBe true
+            field(0, "@kilde")["Sykepenger"].shouldNotBeNull()
         }
     }
 

@@ -60,11 +60,12 @@ abstract class AbakusBehovløser(
             // Ta med ufiltret respons for å sikre bedre sporing
             packet["@kilde"] =
                 mapOf(
-                    "navn" to "abakus-api",
-                    "data" to ytelser,
+                    behov to
+                        mapOf(
+                            "navn" to "abakus-api",
+                            "data" to ytelser,
+                        ),
                 )
-
-            logger.info { "løser behov '$behov'" }
             context.publish(packet.toJson())
         }
     }
