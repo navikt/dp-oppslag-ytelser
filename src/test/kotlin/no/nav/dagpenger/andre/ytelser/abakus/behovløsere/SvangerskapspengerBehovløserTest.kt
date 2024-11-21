@@ -34,7 +34,7 @@ class SvangerskapspengerBehovløserTest {
     }
 
     @Test
-    fun `Sjekk happy case`() {
+    fun `Henter opplysning om Svangerskapspenger`() {
         coEvery { abakusClient.hentYtelser(ident, periode, listOf(Ytelser.SVANGERSKAPSPENGER)) } returns
             listOf(
                 mockYtelse,

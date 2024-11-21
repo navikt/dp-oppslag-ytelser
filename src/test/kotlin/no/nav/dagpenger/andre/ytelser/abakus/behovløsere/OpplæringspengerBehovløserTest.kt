@@ -34,7 +34,7 @@ class OpplæringspengerBehovløserTest {
     }
 
     @Test
-    fun `Sjekk happy case`() {
+    fun `Henter opplysning om Opplæringspenger`() {
         coEvery { abakusClient.hentYtelser(ident, periode, listOf(Ytelser.OPPLÆRINGSPENGER)) } returns
             listOf(
                 mockYtelse,

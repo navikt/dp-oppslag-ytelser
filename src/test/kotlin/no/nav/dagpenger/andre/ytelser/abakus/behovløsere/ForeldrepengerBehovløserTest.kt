@@ -34,7 +34,7 @@ internal class ForeldrepengerBehovløserTest {
     }
 
     @Test
-    fun `Sjekk happy case`() {
+    fun `Henter opplysning om Foreldrepenger`() {
         coEvery { abakusClient.hentYtelser(ident, periode, listOf(Ytelser.FORELDREPENGER)) } returns
             listOf(
                 mockYtelse,

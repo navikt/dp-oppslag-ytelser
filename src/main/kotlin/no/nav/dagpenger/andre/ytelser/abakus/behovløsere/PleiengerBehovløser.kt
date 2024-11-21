@@ -9,6 +9,6 @@ class PleiengerBehovløser(
     rapidsConnection: RapidsConnection,
     client: AbakusClient,
 ) : AbakusBehovløser(rapidsConnection, client) {
-    override val behov = "Pleienger"
+    override val behov = "Pleiepenger"
     override val filtrertePåYtelse = listOf(Ytelser.PLEIEPENGER_NÆRSTÅENDE, Ytelser.PLEIEPENGER_SYKT_BARN)
 }

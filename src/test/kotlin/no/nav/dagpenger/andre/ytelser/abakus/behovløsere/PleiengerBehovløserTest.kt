@@ -34,7 +34,7 @@ class PleiengerBehovløserTest {
     }
 
     @Test
-    fun `Sjekk happy case`() {
+    fun `Henter opplysning om Pleiepenger`() {
         coEvery { abakusClient.hentYtelser(ident, periode, listOf(Ytelser.PLEIEPENGER_NÆRSTÅENDE, Ytelser.PLEIEPENGER_SYKT_BARN)) } returns
             listOf(
                 mockYtelse,
@@ -45,7 +45,7 @@ class PleiengerBehovløserTest {
         with(testRapid.inspektør) {
             size shouldBe 1
             field(0, "ident").asText() shouldBe ident
-            field(0, "@løsning")["Pleienger"].asBoolean() shouldBe true
+            field(0, "@løsning")["Pleiepenger"].asBoolean() shouldBe true
         }
     }
 
@@ -91,14 +91,14 @@ class PleiengerBehovløserTest {
           "@event_name": "behov",
           "@behovId": "83894fc2-6e45-4534-abd1-97a441c57b2f",
           "@behov": [
-            "Pleienger"
+            "Pleiepenger"
           ],
           "ident": "11109233444",
           "behandlingId": "018e9e8d-35f3-7835-9569-5c59ec0737da",
           "fagsakId": "123",
           "søknadId": "4afce924-6cb4-4ab4-a92b-fe91e24f31bf",
           "søknad_uuid": "4afce924-6cb4-4ab4-a92b-fe91e24f31bf",
-          "Pleienger": {
+          "Pleiepenger": {
             "Virkningsdato": "$prøvingsdato",
             "InnsendtSøknadsId": {
               "urn": "urn:soknad:4afce924-6cb4-4ab4-a92b-fe91e24f31bf"

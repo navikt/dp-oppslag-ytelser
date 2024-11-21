@@ -38,7 +38,7 @@ internal class OmsorgspengerBehovløserTest {
     }
 
     @Test
-    fun `Sjekk happy case`() {
+    fun `Henter opplysning om Omsorgspenger`() {
         coEvery { abakusClient.hentYtelser(ident, periode, listOf(Ytelser.OMSORGSPENGER)) } returns
             listOf(
                 mockYtelse,
