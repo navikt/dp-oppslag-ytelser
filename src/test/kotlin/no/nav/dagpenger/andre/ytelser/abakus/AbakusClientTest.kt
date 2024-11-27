@@ -73,6 +73,7 @@ internal class AbakusClientTest {
         response.size shouldBe 2
     }
 
+    //language=JSON
     private val enkeltSvar =
         """
         [{
@@ -102,6 +103,7 @@ internal class AbakusClientTest {
         }]
         """.trimIndent()
 
+    //language=JSON
     private val svarMedListe =
         """
         [
