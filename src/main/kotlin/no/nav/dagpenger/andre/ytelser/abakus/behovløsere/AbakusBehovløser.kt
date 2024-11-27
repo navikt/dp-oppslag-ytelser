@@ -1,14 +1,17 @@
-package no.nav.dagpenger.andre.ytelser.abakus
+package no.nav.dagpenger.andre.ytelser.abakus.behovløsere
 
 import com.github.navikt.tbd_libs.rapids_and_rivers.JsonMessage
 import com.github.navikt.tbd_libs.rapids_and_rivers.River
 import com.github.navikt.tbd_libs.rapids_and_rivers.asLocalDate
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageContext
+import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageMetadata
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.RapidsConnection
+import io.micrometer.core.instrument.MeterRegistry
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.slf4j.MDCContext
 import mu.KotlinLogging
 import mu.withLoggingContext
+import no.nav.dagpenger.andre.ytelser.abakus.AbakusClient
 import no.nav.dagpenger.andre.ytelser.abakus.modell.Periode
 import no.nav.dagpenger.andre.ytelser.abakus.modell.YtelseV1
 import no.nav.dagpenger.andre.ytelser.abakus.modell.Ytelser
@@ -27,8 +30,10 @@ abstract class AbakusBehovløser(
     init {
         River(rapidsConnection)
             .apply {
+                precondition {
+                    it.requireAllOrAny("@behov", listOf(behov))
+                }
                 validate {
-                    it.demandAllOrAny("@behov", listOf(behov))
                     it.forbid("@løsning")
                     it.requireKey("ident")
                     it.requireKey(behov)
@@ -40,6 +45,8 @@ abstract class AbakusBehovløser(
     override fun onPacket(
         packet: JsonMessage,
         context: MessageContext,
+        metadata: MessageMetadata,
+        meterRegistry: MeterRegistry,
     ) {
         withLoggingContext(
             "behandlingId" to packet["behandlingId"].asText(),
