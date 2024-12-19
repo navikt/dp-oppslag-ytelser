@@ -80,7 +80,7 @@ object Configuration {
 
     private fun azureAdTokenSupplier(scope: String): () -> String =
         {
-            runBlocking { azureAdClient.clientCredentials(scope).accessToken }
+            runBlocking { azureAdClient.clientCredentials(scope).access_token }
                 ?: throw RuntimeException("Kunne ikke hente 'access_token' fra Azure AD for scope $scope")
         }
 }
