@@ -52,16 +52,21 @@ class SykepengerService(
             "behovId" to packet["@behovId"].asText(),
         ) {
             val ident = packet["ident"].asText()
-            val ønsketDato = packet[BEHOV.SYKEPENGER_BEHOV]["Virkningsdato"].asLocalDate()
-            val fom = ønsketDato.minusWeeks(8)
-            val tom = ønsketDato
+            val prøvingsdato =
+                if (packet[BEHOV.SYKEPENGER_BEHOV].has("Prøvingsdato")) {
+                    packet[BEHOV.SYKEPENGER_BEHOV]["Prøvingsdato"].asLocalDate()
+                } else {
+                    packet[BEHOV.SYKEPENGER_BEHOV]["Virkningsdato"].asLocalDate()
+                }
+            val fom = prøvingsdato.minusWeeks(8)
+            val tom = prøvingsdato
 
             val perioder: Perioder =
                 runBlocking(MDCContext()) {
                     client.hentSykepenger(ident, fom, tom)
                 }
 
-            val løsning = perioder.utbetaltePerioder.any { ønsketDato in it }
+            val løsning = perioder.utbetaltePerioder.any { prøvingsdato in it }
 
             packet["@løsning"] = mapOf(BEHOV.SYKEPENGER_BEHOV to løsning)
 

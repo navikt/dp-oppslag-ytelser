@@ -13,9 +13,9 @@ internal class SykepengerServiceTest {
     private val testRapid = TestRapid()
 
     private val ident = "11109233444"
-    private val virkningsdato = LocalDate.of(2022, 1, 1)
-    private val fom = virkningsdato.minusWeeks(8)
-    private val tom = virkningsdato
+    private val prøvingsdato = LocalDate.of(2022, 1, 1)
+    private val fom = prøvingsdato.minusWeeks(8)
+    private val tom = prøvingsdato
 
     private val sykepengerClient = mockk<SykepengerClient>()
 
@@ -27,7 +27,7 @@ internal class SykepengerServiceTest {
     }
 
     @Test
-    fun `returner true hvis det finnes sykepenger på virkningsdato`() {
+    fun `returner true hvis det finnes sykepenger på prøvingsdato`() {
         coEvery { sykepengerClient.hentSykepenger(ident, fom, tom) } returns mockPerioderTreff
 
         testRapid.sendTestMessage(json)
@@ -41,7 +41,7 @@ internal class SykepengerServiceTest {
     }
 
     @Test
-    fun `returnerer false hvis det ikke finnes sykepenger på virkningsdato`() {
+    fun `returnerer false hvis det ikke finnes sykepenger på prøvingsdato`() {
         coEvery { sykepengerClient.hentSykepenger(ident, fom, tom) } returns mockPerioderBom
 
         testRapid.sendTestMessage(json)
@@ -71,8 +71,8 @@ internal class SykepengerServiceTest {
             utbetaltePerioder =
                 listOf(
                     no.nav.dagpenger.andre.ytelser.sykepenger.modell.Periode(
-                        fom = virkningsdato.minusWeeks(4),
-                        tom = virkningsdato.plusWeeks(1),
+                        fom = prøvingsdato.minusWeeks(4),
+                        tom = prøvingsdato.plusWeeks(1),
                         grad = 50,
                     ),
                 ),
@@ -83,8 +83,8 @@ internal class SykepengerServiceTest {
             utbetaltePerioder =
                 listOf(
                     no.nav.dagpenger.andre.ytelser.sykepenger.modell.Periode(
-                        fom = virkningsdato.minusWeeks(4),
-                        tom = virkningsdato.minusWeeks(1),
+                        fom = prøvingsdato.minusWeeks(4),
+                        tom = prøvingsdato.minusWeeks(1),
                         grad = 50,
                     ),
                 ),
@@ -110,7 +110,7 @@ internal class SykepengerServiceTest {
           "søknadId": "4afce924-6cb4-4ab4-a92b-fe91e24f31bf",
           "søknad_uuid": "4afce924-6cb4-4ab4-a92b-fe91e24f31bf",
           "Sykepenger": {
-            "Virkningsdato": "$virkningsdato",
+            "Prøvingsdato": "$prøvingsdato",
             "InnsendtSøknadsId": {
               "urn": "urn:soknad:4afce924-6cb4-4ab4-a92b-fe91e24f31bf"
             },

@@ -53,7 +53,12 @@ abstract class AbakusBehovløser(
             "behovId" to packet["@behovId"].asText(),
         ) {
             val ident = packet["ident"].asText()
-            val prøvingsdato = packet[behov]["Virkningsdato"].asLocalDate()
+            val prøvingsdato =
+                if (packet[behov].has("Prøvingsdato")) {
+                    packet[behov]["Prøvingsdato"].asLocalDate()
+                } else {
+                    packet[behov]["Virkningsdato"].asLocalDate()
+                }
             val periode = Periode(fom = prøvingsdato, tom = prøvingsdato)
 
             val ytelser: List<YtelseV1> =
