@@ -52,12 +52,7 @@ class SykepengerService(
             "behovId" to packet["@behovId"].asText(),
         ) {
             val ident = packet["ident"].asText()
-            val prøvingsdato =
-                if (packet[BEHOV.SYKEPENGER_BEHOV].has("Prøvingsdato")) {
-                    packet[BEHOV.SYKEPENGER_BEHOV]["Prøvingsdato"].asLocalDate()
-                } else {
-                    packet[BEHOV.SYKEPENGER_BEHOV]["Virkningsdato"].asLocalDate()
-                }
+            val prøvingsdato = packet[BEHOV.SYKEPENGER_BEHOV]["Prøvingsdato"].asLocalDate()
             val fom = prøvingsdato.minusWeeks(8)
             val tom = prøvingsdato
 
