@@ -43,3 +43,7 @@ spec:
     pool: {{ kafka.pool }}
   secureLogs:
     enabled: true
+  observability:
+    autoInstrumentation:
+      enabled: true
+      runtime: java
