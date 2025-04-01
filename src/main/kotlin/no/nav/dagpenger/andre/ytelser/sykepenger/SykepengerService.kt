@@ -75,7 +75,7 @@ class SykepengerService(
                         ),
                 )
 
-            logger.info { "løser behov '$BEHOV' - Sykepengeperioder: $perioder" }
+            logger.info { "løser behov '${BEHOV.SYKEPENGER_BEHOV}' - Sykepengeperioder: $perioder" }
             context.publish(packet.toJson())
         }
     }
