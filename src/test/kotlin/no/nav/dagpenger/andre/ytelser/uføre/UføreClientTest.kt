@@ -67,7 +67,7 @@ class UføreClientTest {
 
     private fun validateRequest(request: HttpRequestData) {
         request.url.toString() shouldBe "$baseUrl?dato=$testDate"
-        request.headers["Fnr"] shouldBe ident
+        request.headers["fnr"] shouldBe ident
         request.headers[HttpHeaders.Authorization] shouldBe "Bearer token"
     }
 

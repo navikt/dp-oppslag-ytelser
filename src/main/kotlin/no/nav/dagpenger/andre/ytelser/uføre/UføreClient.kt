@@ -53,7 +53,7 @@ class UføreClient(
         try {
             httpKlient
                 .get(baseUrl) {
-                    header("Fnr", ident)
+                    header("fnr", ident)
                     parameter("dato", dato)
                 }.body()
         } catch (e: ClientRequestException) {
