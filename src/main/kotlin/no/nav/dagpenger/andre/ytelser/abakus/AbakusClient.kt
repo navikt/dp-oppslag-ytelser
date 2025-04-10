@@ -68,7 +68,7 @@ class AbakusClient(
             .post("$baseUrl/hent-ytelse-vedtak") {
                 MDC.get("behandlingId")?.let { header(XCorrelationId, it) }
                 MDC.get("behovId")?.let { behovId ->
-                    header(HttpHeaders.XRequestId, behovId).also { log.info { "Legger ved behovId=$behovId" } }
+                    header(HttpHeaders.XRequestId, behovId)
                     header(NAV_CALL_ID_HEADER, behovId)
                 }
                 accept(ContentType.Application.Json)

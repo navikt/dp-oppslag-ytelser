@@ -69,7 +69,7 @@ class UføreBehovLøser(
                         ),
                 )
 
-            logger.info { "løser behov '${Behov.UFØRE}' - Uføre: $uføre" }
+            logger.info { "løser behov '${Behov.UFØRE}' - $uføre" }
             context.publish(packet.toJson())
         }
     }

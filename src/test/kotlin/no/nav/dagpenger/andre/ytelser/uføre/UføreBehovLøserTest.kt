@@ -74,7 +74,7 @@ class UføreBehovLøserTest {
           "@behov": [
             "Uføre"
           ],
-          "ident": "11109233444",
+          "ident": "$ident",
           "behandlingId": "018e9e8d-35f3-7835-9569-5c59ec0737da",
           "fagsakId": "123",
           "søknadId": "4afce924-6cb4-4ab4-a92b-fe91e24f31bf",
