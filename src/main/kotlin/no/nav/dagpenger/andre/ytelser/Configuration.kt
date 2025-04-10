@@ -18,8 +18,6 @@ object Configuration {
                 "KAFKA_RAPID_TOPIC" to "teamdagpenger.rapid.v1",
                 "KAFKA_RESET_POLICY" to "LATEST",
                 "KAFKA_CONSUMER_GROUP_ID" to "dp-oppslag-ytelser-v1",
-                "SERVICEUSER_TPTS_USERNAME" to System.getenv("SERVICEUSER_TPTS_USERNAME"),
-                "SERVICEUSER_TPTS_PASSWORD" to System.getenv("SERVICEUSER_TPTS_PASSWORD"),
             ),
         )
 
@@ -31,6 +29,8 @@ object Configuration {
                 "abakus.url" to "https://fpabakus.dev-fss-pub.nais.io/fpabakus/ekstern/api/ytelse/v1",
                 "sykepenger.scope" to "api://dev-gcp.tbd.spokelse/.default",
                 "sykepenger.url" to "http://spokelse.tbd",
+                "uføre.url" to "https://pensjon-pen-q2.dev-fss-pub.nais.io/api/uforetrygd/uforegrad",
+                "uføre.scope" to "api://dev-fss.pensjon-q2.pensjon-pen-q2/.default",
             ),
         )
     private val prodProperties =
@@ -41,6 +41,8 @@ object Configuration {
                 "abakus.url" to "https://fpabakus.prod-fss-pub.nais.io/fpabakus/ekstern/api/ytelse/v1",
                 "sykepenger.scope" to "api://prod-gcp.tbd.spokelse/.default",
                 "sykepenger.url" to "http://spokelse.tbd",
+                "uføre.url" to "https://pensjon-pen.prod-fss-pub.nais.io/api/uforetrygd/uforegrad",
+                "uføre.scope" to "api://prod-fss.pensjondeployer.pensjon-pen/.default",
             ),
         )
 
@@ -66,9 +68,13 @@ object Configuration {
 
     fun sykepengerTokenProvider(): () -> String = azureAdTokenSupplier(config()[Key("sykepenger.scope", stringType)])
 
+    fun uføreTokenProvider(): () -> String = azureAdTokenSupplier(config()[Key("uføre.scope", stringType)])
+
     fun abakusUrl(): String = config()[Key("abakus.url", stringType)]
 
     fun sykepengerUrl(): String = config()[Key("sykepenger.url", stringType)]
+
+    fun uføreUrl(): String = config()[Key("uføre.url", stringType)]
 
     private val azureAdClient: CachedOauth2Client by lazy {
         val azureAdConfig = OAuth2Config.AzureAd(config())

@@ -8,8 +8,10 @@ import no.nav.dagpenger.andre.ytelser.abakus.behovløsere.OmsorgspengerBehovløs
 import no.nav.dagpenger.andre.ytelser.abakus.behovløsere.OpplæringspengerBehovløser
 import no.nav.dagpenger.andre.ytelser.abakus.behovløsere.PleiengerBehovløser
 import no.nav.dagpenger.andre.ytelser.abakus.behovløsere.SvangerskapspengerBehovløser
+import no.nav.dagpenger.andre.ytelser.sykepenger.SykepengerBehovløser
 import no.nav.dagpenger.andre.ytelser.sykepenger.SykepengerClient
-import no.nav.dagpenger.andre.ytelser.sykepenger.SykepengerService
+import no.nav.dagpenger.andre.ytelser.uføre.UføreBehovLøser
+import no.nav.dagpenger.andre.ytelser.uføre.UføreClient
 import no.nav.helse.rapids_rivers.RapidApplication
 
 fun main() {
@@ -34,6 +36,11 @@ fun main() {
             tokenProvider = Configuration.sykepengerTokenProvider(),
         )
 
+    val uføre =
+        UføreClient(
+            baseUrl = Configuration.uføreUrl(),
+            tokenProvider = Configuration.uføreTokenProvider(),
+        )
     RapidApplication
         .create(Configuration.config)
         .apply {
@@ -57,9 +64,13 @@ fun main() {
                 rapidsConnection = this,
                 client = abakusClient,
             )
-            SykepengerService(
+            SykepengerBehovløser(
                 rapidsConnection = this,
                 client = sykepenger,
+            )
+            UføreBehovLøser(
+                rapidsConnection = this,
+                client = uføre,
             )
 
             register(

@@ -5,11 +5,10 @@ import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.mockk.coEvery
 import io.mockk.mockk
-import no.nav.dagpenger.andre.ytelser.sykepenger.modell.Perioder
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 
-internal class SykepengerServiceTest {
+internal class SykepengerBehovløserTest {
     private val testRapid = TestRapid()
 
     private val ident = "11109233444"
@@ -20,7 +19,7 @@ internal class SykepengerServiceTest {
     private val sykepengerClient = mockk<SykepengerClient>()
 
     init {
-        SykepengerService(
+        SykepengerBehovløser(
             rapidsConnection = testRapid,
             client = sykepengerClient,
         )
@@ -70,7 +69,7 @@ internal class SykepengerServiceTest {
         Perioder(
             utbetaltePerioder =
                 listOf(
-                    no.nav.dagpenger.andre.ytelser.sykepenger.modell.Periode(
+                    Periode(
                         fom = prøvingsdato.minusWeeks(4),
                         tom = prøvingsdato.plusWeeks(1),
                         grad = 50,
@@ -82,7 +81,7 @@ internal class SykepengerServiceTest {
         Perioder(
             utbetaltePerioder =
                 listOf(
-                    no.nav.dagpenger.andre.ytelser.sykepenger.modell.Periode(
+                    Periode(
                         fom = prøvingsdato.minusWeeks(4),
                         tom = prøvingsdato.minusWeeks(1),
                         grad = 50,

@@ -11,14 +11,13 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.slf4j.MDCContext
 import mu.KotlinLogging
 import mu.withLoggingContext
-import no.nav.dagpenger.andre.ytelser.sykepenger.modell.Perioder
 
-class SykepengerService(
+class SykepengerBehovløser(
     rapidsConnection: RapidsConnection,
     private val client: SykepengerClient,
 ) : River.PacketListener {
     companion object {
-        internal object BEHOV {
+        private object BEHOV {
             const val SYKEPENGER_BEHOV = "Sykepenger"
         }
 

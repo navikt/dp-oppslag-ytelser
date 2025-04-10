@@ -36,6 +36,7 @@ spec:
     outbound:
       external:
         - host: fpabakus.{{cluster.fss}}-pub.nais.io
+        - host: pensjon-pen.{{cluster.fss}}-pub.nais.io
       rules:
         - application: spokelse
           namespace: tbd

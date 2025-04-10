@@ -1,4 +1,4 @@
-package no.nav.dagpenger.andre.ytelser.sykepenger.modell
+package no.nav.dagpenger.andre.ytelser.sykepenger
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import java.time.LocalDate
