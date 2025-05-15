@@ -28,7 +28,7 @@ spec:
       memory: 512Mi
     requests:
       cpu: 60m
-      memory: 256Mi
+      memory: 336Mi
   replicas:
     min: 1
     max: 2
@@ -40,6 +40,9 @@ spec:
       rules:
         - application: spokelse
           namespace: tbd
+  env:
+    - name: JDK_JAVA_OPTIONS
+      value: -XX:+UseParallelGC -XX:MaxRAMPercentage=50.0 -XX:ActiveProcessorCount=4
   kafka:
     pool: {{ kafka.pool }}
   secureLogs:
