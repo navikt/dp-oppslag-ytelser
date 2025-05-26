@@ -6,7 +6,7 @@ metadata:
   labels:
     team: teamdagpenger
 spec:
-  image: {{ image }}
+  image: "{{ image }}"
   port: 8080
   strategy:
     type: RollingUpdate
@@ -44,7 +44,7 @@ spec:
     - name: JDK_JAVA_OPTIONS
       value: -XX:+UseParallelGC -XX:MaxRAMPercentage=50.0 -XX:ActiveProcessorCount=4
   kafka:
-    pool: {{ kafka.pool }}
+    pool: "{{ kafka.pool }}"
   secureLogs:
     enabled: true
   observability:
