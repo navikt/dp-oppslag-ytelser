@@ -52,7 +52,7 @@ spec:
           namespace: tbd
   env:
     - name: JDK_JAVA_OPTIONS
-      value: -XX:+UseParallelGC -XX:MaxRAMPercentage=50.0 -XX:ActiveProcessorCount=4
+      value: -XX:+UseParallelGC -XX:MaxRAMPercentage=25.0 -XX:ActiveProcessorCount=4
   kafka:
     pool: "{{ kafka.pool }}"
   secureLogs:
