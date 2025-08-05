@@ -40,7 +40,7 @@ spec:
       cpu: 81m
       memory: 448Mi
   replicas:
-    min: 1
+    min: 2
     max: 2
   accessPolicy:
     outbound:
