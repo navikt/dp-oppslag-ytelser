@@ -7,6 +7,8 @@ import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageContext
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.MessageMetadata
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.RapidsConnection
 import io.micrometer.core.instrument.MeterRegistry
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.slf4j.MDCContext
 import mu.KotlinLogging
 import mu.withLoggingContext
 
@@ -49,9 +51,7 @@ class UføreBehovLøser(
             val prøvingsdato =
                 packet[Behov.UFØRE]["Prøvingsdato"].asLocalDate()
 
-            packet["@løsning"] = mapOf(Behov.UFØRE to false)
-
-            /*val uføre: Uføre? =
+            val uføre: Uføre? =
                 runBlocking(MDCContext()) {
                     client.hentUføre(ident, prøvingsdato)
                 }
@@ -69,7 +69,7 @@ class UføreBehovLøser(
                         ),
                 )
 
-            logger.info { "løser behov '${Behov.UFØRE}' - $uføre" }*/
+            logger.info { "løser behov '${Behov.UFØRE}' - $uføre" }
             context.publish(packet.toJson())
         }
     }
