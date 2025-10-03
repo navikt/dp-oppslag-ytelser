@@ -1,7 +1,7 @@
 package no.nav.dagpenger.andre.ytelser
 
 import com.github.navikt.tbd_libs.rapids_and_rivers_api.RapidsConnection
-import mu.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import no.nav.dagpenger.andre.ytelser.abakus.AbakusClient
 import no.nav.dagpenger.andre.ytelser.abakus.behovløsere.ForeldrepengerBehovløser
 import no.nav.dagpenger.andre.ytelser.abakus.behovløsere.OmsorgspengerBehovløser

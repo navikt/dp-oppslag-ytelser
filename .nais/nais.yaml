@@ -16,10 +16,20 @@ spec:
   azure:
     application:
       enabled: true
+  startup:
+    path: /isalive
+    initialDelay: 10
+    failureThreshold: 6
+    periodSeconds: 5
+    timeout: 1
   liveness:
     path: /isalive
+    failureThreshold: 6
+    periodSeconds: 10
   readiness:
     path: /isready
+    failureThreshold: 3
+    periodSeconds: 10
   prometheus:
     enabled: true
     path: /metrics
@@ -27,10 +37,10 @@ spec:
     limits:
       memory: 512Mi
     requests:
-      cpu: 60m
-      memory: 336Mi
+      cpu: 81m
+      memory: 448Mi
   replicas:
-    min: 1
+    min: 2
     max: 2
   accessPolicy:
     outbound:
@@ -42,12 +52,16 @@ spec:
           namespace: tbd
   env:
     - name: JDK_JAVA_OPTIONS
-      value: -XX:+UseParallelGC -XX:MaxRAMPercentage=50.0 -XX:ActiveProcessorCount=4
+      value: -XX:+UseParallelGC -XX:MaxRAMPercentage=25.0 -XX:ActiveProcessorCount=4
   kafka:
     pool: "{{ kafka.pool }}"
   secureLogs:
     enabled: true
   observability:
+    logging:
+      destinations:
+        - id: loki
+        - id: elastic
     autoInstrumentation:
       enabled: true
       runtime: java
