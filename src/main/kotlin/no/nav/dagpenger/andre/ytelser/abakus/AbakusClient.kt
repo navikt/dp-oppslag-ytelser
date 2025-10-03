@@ -1,5 +1,6 @@
 package no.nav.dagpenger.andre.ytelser.abakus
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.HttpClientEngine
@@ -18,7 +19,6 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpHeaders.XCorrelationId
 import io.ktor.http.contentType
 import io.ktor.serialization.jackson.JacksonConverter
-import mu.KotlinLogging
 import no.nav.dagpenger.andre.ytelser.Configuration
 import no.nav.dagpenger.andre.ytelser.JsonMapper.defaultObjectMapper
 import no.nav.dagpenger.andre.ytelser.abakus.modell.Ident
