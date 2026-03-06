@@ -57,8 +57,6 @@ spec:
       value: -XX:+UseParallelGC -XX:MaxRAMPercentage=25.0 -XX:ActiveProcessorCount=4
   kafka:
     pool: "{{ kafka.pool }}"
-  secureLogs:
-    enabled: true
   observability:
     logging:
       destinations:
