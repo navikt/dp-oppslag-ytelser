@@ -8,7 +8,7 @@ on:
     paths-ignore:
       - 'docs/**'
 
-obs:
+jobs:
   build:
     name: Build and publish Docker image
     runs-on: ubuntu-latest
