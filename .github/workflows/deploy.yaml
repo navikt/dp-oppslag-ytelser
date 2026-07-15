@@ -64,9 +64,8 @@ jobs:
     steps:
       - uses: navikt/dagpenger/actions/attest-sign@master
         with:
+          image: ${{ needs.build.outputs.image }}
           digest: ${{ needs.build.outputs.digest }}
-          identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
-          project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
           team: teamdagpenger
 
   deploy-dev:
