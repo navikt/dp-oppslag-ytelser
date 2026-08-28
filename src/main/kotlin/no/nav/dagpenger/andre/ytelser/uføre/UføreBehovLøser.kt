@@ -44,10 +44,10 @@ class UføreBehovLøser(
         meterRegistry: MeterRegistry,
     ) {
         withLoggingContext(
-            "behandlingId" to packet["behandlingId"].asText(),
-            "behovId" to packet["@behovId"].asText(),
+            "behandlingId" to packet["behandlingId"].asString(),
+            "behovId" to packet["@behovId"].asString(),
         ) {
-            val ident = packet["ident"].asText()
+            val ident = packet["ident"].asString()
             val prøvingsdato =
                 packet[Behov.UFØRE]["Prøvingsdato"].asLocalDate()
 

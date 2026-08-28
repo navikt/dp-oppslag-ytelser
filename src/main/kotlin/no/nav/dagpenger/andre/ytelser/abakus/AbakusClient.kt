@@ -18,7 +18,7 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpHeaders.XCorrelationId
 import io.ktor.http.contentType
-import io.ktor.serialization.jackson.JacksonConverter
+import io.ktor.serialization.jackson3.JacksonConverter
 import no.nav.dagpenger.andre.ytelser.Configuration
 import no.nav.dagpenger.andre.ytelser.JsonMapper.defaultObjectMapper
 import no.nav.dagpenger.andre.ytelser.abakus.modell.Ident

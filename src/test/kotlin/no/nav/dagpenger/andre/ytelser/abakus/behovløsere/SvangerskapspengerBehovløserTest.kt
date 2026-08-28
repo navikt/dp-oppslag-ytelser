@@ -44,7 +44,7 @@ class SvangerskapspengerBehovløserTest {
 
         with(testRapid.inspektør) {
             size shouldBe 1
-            field(0, "ident").asText() shouldBe ident
+            field(0, "ident").asString() shouldBe ident
             field(0, "@løsning")["Svangerskapspenger"].asBoolean() shouldBe true
         }
     }
