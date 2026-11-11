@@ -30,7 +30,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:1.11.0")
 
     implementation(libs.bundles.ktor.client)
-    implementation("no.nav.dagpenger:oauth2-klient:2026.10.30-06.16.f1d0628bf128")
+    implementation("no.nav.dagpenger:oauth2-klient:2026.11.11-11.51.eae9ddff2009")
     implementation(libs.bundles.jackson)
     implementation("io.ktor:ktor-serialization-jackson:$ktorVersion")
     // mdc coroutine plugin
