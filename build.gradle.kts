@@ -1,10 +1,3 @@
-
-
-val kotestVersion = "5.9.1"
-val jacksonVersion = "2.17.2"
-val mockkVersion = "1.13.12"
-val felleslibVersion = "0.0.140"
-
 plugins {
     id("common")
     application
@@ -32,7 +25,6 @@ dependencies {
     implementation(libs.bundles.ktor.client)
     implementation("no.nav.dagpenger:oauth2-klient:2026.11.12-12.16.6c115ef19241")
     implementation(libs.bundles.jackson)
-    implementation("io.ktor:ktor-serialization-jackson:$ktorVersion")
     // mdc coroutine plugin
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:1.11.0")
     // test
